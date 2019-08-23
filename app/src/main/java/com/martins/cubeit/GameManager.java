@@ -30,7 +30,7 @@ public final class GameManager implements UiButtonListener{
         Cube solverCube = new Cube(CubeType.Solved);
         cubeObject = new CubeObject(solverCube, context);
         drawables.addAll(cubeObject.getSubCube());
-        moves = ScrableReader.generateMoveSetFromString("F1U1");
+        moves = ScrableReader.generateMoveSetFromString("U1F1");
     }
 
     public void draw(VirtualCamera camera) {
@@ -44,6 +44,8 @@ public final class GameManager implements UiButtonListener{
 
     @Override
     public void onButtonClick(UiManager.methods caller) {
+        Log.d(TAG, "Button clicked.");
+
         if (caller.equals(UiManager.methods.solveButton))
             cubeObject.runRotationSequence(moves);
     }

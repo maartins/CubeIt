@@ -19,7 +19,6 @@ public final class UiManager {
     }
 
     public static final View.OnClickListener solveButton = v -> {
-        Log.d(TAG, "Solve Button.");
         for (UiButtonListener l : listeners)
             l.onButtonClick(methods.solveButton);
     };

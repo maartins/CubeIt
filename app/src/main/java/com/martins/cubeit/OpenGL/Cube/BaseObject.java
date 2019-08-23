@@ -3,10 +3,12 @@ package com.martins.cubeit.OpenGL.Cube;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.martins.cubeit.OpenGL.Shader;
 import com.martins.cubeit.OpenGL.TextureHandle;
 import com.martins.cubeit.OpenGL.VirtualCamera;
+import com.martins.cubeit.PersonalUtils;
 import com.martins.cubeit.R;
 
 
@@ -14,6 +16,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 public class BaseObject {
+    private static final String TAG = "BaseObject";
     private final int id;
 
     private final TextureHandle textureHandle = new TextureHandle();
@@ -80,10 +83,36 @@ public class BaseObject {
     }
 
     public void rotate(int angle, int[] axis) {
+        float[] rotationMatrixTemp = new float[16];
         float x = this.x, y = this.y, z = this.z;
+        //Log.d(TAG, "x: " + x + " y: " + y + " z: " + z);
+        //PersonalUtils.displaySquareMatrix(modelMatrix, "model");
+
+        //x = modelMatrix[12];
+        //y = modelMatrix[13];
+        //z = modelMatrix[14];
+
+        //Log.d(TAG, "x: " + x + " y: " + y + " z: " + z);
+
         translate(-x, -y, -z);
+
+        //modelMatrix[12] = 0;
+        //modelMatrix[13] = 0;
+        //modelMatrix[14] = 0;
+
+        //Matrix.rotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
         Matrix.rotateM(modelMatrix, 0, angle, axis[0], axis[1], axis[2]);
+        //Matrix.setIdentityM(rotationMatrixTemp, 0);
+        //Matrix.setIdentityM(modelMatrix, 0);
+        //Matrix.rotateM(rotationMatrixTemp, 0, angle, axis[0], axis[1], axis[2]);
+        //Matrix.setRotateEulerM(rotationMatrixTemp, 0, angle * axis[0], angle * axis[1], angle * axis[2]);
+        //Matrix.setRotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
+        //Matrix.multiplyMM(rotationMatrix, 0, rotationMatrixTemp, 0, rotationMatrix, 0);
+        //Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotationMatrix, 0);
         translate(x, y, z);
+        //modelMatrix[12] = x;
+        //modelMatrix[13] = y;
+        //modelMatrix[14] = z;
     }
 
     public void scale(float scaleFactor) {
@@ -100,6 +129,7 @@ public class BaseObject {
 
         if (!isHidden && isValid()) {
             Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
+            //Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotationMatrix, 0);
             Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, modelMatrix, 0);
             objectShader.useProgram();
 

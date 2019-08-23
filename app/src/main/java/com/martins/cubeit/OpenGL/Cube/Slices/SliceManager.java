@@ -17,27 +17,31 @@ public class SliceManager {
     private boolean isRotating = false;
     private boolean shouldRepeat = false;
 
-    private ArrayList<SliceRotatationResult> moves = null;
+    private ArrayList<SliceRotatationResult> curMoves = new ArrayList<>();
+    private ArrayList<SliceRotatationResult> allMoves = new ArrayList<>();
     private SliceRotatationResult currentMove = null;
 
-    private int angle = 1;
-    private int curAngle = 0;
-    private int maxAngle = 90;
-
-    private int moveSelector = 0;
+    private int angle;
+    private int curAngle;
+    private int maxAngle;
 
     public SliceManager(CubeObject cube) {
         this.cube = cube;
     }
 
     public void startRotation(ArrayList<SliceRotatationResult> moves) {
-        if (shouldRepeat && !isRotating) {
-            this.moves = moves;
+        if (!isRotating && moves != null) {
+            for (SliceRotatationResult result : moves) {
+                curMoves.add(new SliceRotatationResult(result));
+                allMoves.add(new SliceRotatationResult(result));
+            }
+
+            Log.d(TAG, "Rotation recieved");
+            allMoves.forEach(o -> Log.d(TAG, o.toString()));
 
             angle = 1;
             curAngle = 0;
             maxAngle = 90;
-            moveSelector = 0;
 
             currentMove = nextMove();
             isRotating = true;
@@ -49,22 +53,22 @@ public class SliceManager {
             if (rotateSlice(currentMove.slice, currentMove.rotationDirection)) {
                 flipSubCubes(currentMove.slice, currentMove.rotationDirection);
                 currentMove = nextMove();
-                if (currentMove == null)
+                if (currentMove == null) {
+                    Log.d(TAG, "Rotation sequence finished. Last rotations: ");
+                    allMoves.forEach(o -> Log.d(TAG, o.toString()));
                     isRotating = false;
+                }
             }
         }
     }
 
     private SliceRotatationResult nextMove() {
-        if (moves == null)
-            return null;
-        if (moves.isEmpty())
+        if (curMoves == null || curMoves.isEmpty())
             return null;
 
-        if (moveSelector < moves.size())
-            return moves.get(moveSelector++);
-        else
-            return null;
+        Log.d(TAG, "nextMove: " + curMoves.get(0));
+
+        return curMoves.remove(0);
     }
 
     private boolean rotateSlice(Position position, RotationDirection direction) {
