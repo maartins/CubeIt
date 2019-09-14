@@ -1,25 +1,34 @@
 package com.martins.cubeit;
 
-import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
 public final class UiManager {
+
+    private static final String TAG = "UiManager";
+
     public enum methods {
         solveButton
     }
 
-    private static final String TAG = "UiManager";
+    private ArrayList<UiButtonListener> listeners = new ArrayList<>();
 
-    private static ArrayList<UiButtonListener> listeners = new ArrayList<>();
+    private UiManager() {}
 
-    public static void addUiButtonListener(UiButtonListener listener) {
-        listeners.add(listener);
+    public static void addElement(Button button, methods id) {
+        button.setOnClickListener(v -> {
+            for (UiButtonListener l : SingletonHelper.INSTANCE.listeners) {
+                l.onButtonClick(id);
+            }
+        });
     }
 
-    public static final View.OnClickListener solveButton = v -> {
-        for (UiButtonListener l : listeners)
-            l.onButtonClick(methods.solveButton);
-    };
+    public static void addUiButtonListener(UiButtonListener listener) {
+        SingletonHelper.INSTANCE.listeners.add(listener);
+    }
+
+    private static class SingletonHelper {
+        private static final UiManager INSTANCE = new UiManager();
+    }
 }

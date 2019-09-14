@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (!checkDevicePermissions()) {
             Log.d(TAG, "Permissions are good.");
-            findViewById(R.id.solve_button).setOnClickListener(UiManager.solveButton);
+            UiManager.addElement(findViewById(R.id.solve_button), UiManager.methods.solveButton);
         }
     }
 

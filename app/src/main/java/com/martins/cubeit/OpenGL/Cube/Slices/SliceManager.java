@@ -39,7 +39,7 @@ public class SliceManager {
             Log.d(TAG, "Rotation recieved");
             allMoves.forEach(o -> Log.d(TAG, o.toString()));
 
-            angle = 1;
+            angle = cube.getTopSlice().getDefaultRotationSpeed();
             curAngle = 0;
             maxAngle = 90;
 
@@ -72,77 +72,19 @@ public class SliceManager {
     }
 
     private boolean rotateSlice(Position position, RotationDirection direction) {
-        boolean isDone = false;
-
-        switch (position) {
-            case Top:
-                if (direction == RotationDirection.CCW)
-                    cube.getTopSlice().rotate(-angle);
-                else
-                    cube.getTopSlice().rotate(angle);
-                break;
-            case Bottom:
-                if (direction == RotationDirection.CCW)
-                    cube.getBottomSlice().rotate(angle);
-                else
-                    cube.getBottomSlice().rotate(-angle);
-                break;
-            case Front:
-                if (direction == RotationDirection.CCW)
-                    cube.getFrontSlice().rotate(angle);
-                else
-                    cube.getFrontSlice().rotate(-angle);
-                break;
-            case Back:
-                if (direction == RotationDirection.CCW)
-                    cube.getBackSlice().rotate(-angle);
-                else
-                    cube.getBackSlice().rotate(angle);
-                break;
-            case Left:
-                if (direction == RotationDirection.CCW)
-                    cube.getLeftSlice().rotate(-angle);
-                else
-                    cube.getLeftSlice().rotate(angle);
-                break;
-            case Right:
-                if (direction == RotationDirection.CCW)
-                    cube.getRightSlice().rotate(angle);
-                else
-                    cube.getRightSlice().rotate(-angle);
-                break;
-        }
+        cube.getSliceByPosition(position).rotate(direction);
 
         curAngle += angle;
 
         if (curAngle >= maxAngle) {
-            isDone = true;
             curAngle = 0;
+            return true;
         }
 
-        return isDone;
+        return false;
     }
 
     private void flipSubCubes(Position position, RotationDirection direction) {
-        switch (position) {
-            case Top:
-                    cube.getTopSlice().flipSubCubes(direction);
-                break;
-            case Bottom:
-                    cube.getBottomSlice().flipSubCubes(direction);
-                break;
-            case Front:
-                    cube.getFrontSlice().flipSubCubes(direction);
-                break;
-            case Back:
-                    cube.getBackSlice().flipSubCubes(direction);
-                break;
-            case Left:
-                    cube.getLeftSlice().flipSubCubes(direction);
-                break;
-            case Right:
-                    cube.getRightSlice().flipSubCubes(direction);
-                break;
-        }
+        cube.getSliceByPosition(position).flipSubCubes(direction);
     }
 }

@@ -1,7 +1,5 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
-import android.util.Log;
-
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 import com.martins.cubeit.OpenGL.Cube.SubCubeObject;
 
@@ -17,6 +15,8 @@ public abstract class CubeSlice {
     protected CubeSlice top, left, right, bottom;
 
     ArrayList<SubCubeObject> subCubes = new ArrayList<>();
+
+    private int defaultRotationSpeed = 1;
 
     public void addRelations(CubeSlice top, CubeSlice left, CubeSlice right, CubeSlice bottom) {
         this.top = top;
@@ -51,6 +51,10 @@ public abstract class CubeSlice {
         this.bot_m = bot_m;
         this.bot_r = bot_r;
         updateSubCubeList();
+    }
+
+    int getDefaultRotationSpeed() {
+        return defaultRotationSpeed;
     }
 
     void flipSubCubes_Internal(RotationDirection direction) {
@@ -113,5 +117,6 @@ public abstract class CubeSlice {
     }
 
     abstract void rotate(int angle);
+    abstract void rotate(RotationDirection direction);
     abstract void flipSubCubes(RotationDirection direction);
 }

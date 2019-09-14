@@ -2,11 +2,14 @@ package com.martins.cubeit.OpenGL.Cube;
 
 import android.content.Context;
 
+import com.martins.cubeit.CubeWare.CubeData.Position;
+import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 import com.martins.cubeit.CubeWare.CubeData.SliceRotatationResult;
 import com.martins.cubeit.CubeWare.Main.Cube;
 import com.martins.cubeit.CubeWare.SubCubes.SubCube;
 import com.martins.cubeit.OpenGL.Cube.Slices.BackSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.BottomSlice;
+import com.martins.cubeit.OpenGL.Cube.Slices.CubeSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.FrontSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.LeftSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.RightSlice;
@@ -134,6 +137,26 @@ public class CubeObject {
 
     public BackSlice getBackSlice() {
         return backSlice;
+    }
+
+    public CubeSlice getSliceByPosition(Position position) {
+        switch (position) {
+            case Top:
+                return topSlice;
+            case Bottom:
+                return bottomSlice;
+            case Front:
+                return frontSlice;
+            case Back:
+                return backSlice;
+            case Left:
+                return leftSlice;
+            case Right:
+                return rightSlice;
+            case Center:
+                default:
+                return null;
+        }
     }
 
     public ArrayList<SubCubeObject> getSubCube() {

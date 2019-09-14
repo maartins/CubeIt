@@ -7,8 +7,16 @@ public class LeftSlice extends CubeSlice {
 
     @Override
     public void rotate(int angle) {
-        for (SubCubeObject subCube: subCubes)
+        for (SubCubeObject subCube : subCubes)
             subCube.rotate(angle, new int[]{1, 0, 0});
+    }
+
+    @Override
+    void rotate(RotationDirection direction) {
+        if (direction == RotationDirection.CCW)
+            rotate(-getDefaultRotationSpeed());
+        else
+            rotate(getDefaultRotationSpeed());
     }
 
     @Override
