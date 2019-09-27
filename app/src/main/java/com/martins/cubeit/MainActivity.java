@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         if (!checkDevicePermissions()) {
             Log.d(TAG, "Permissions are good.");
             UiManager.addElement(findViewById(R.id.solve_button), UiManager.methods.solveButton);
+            UiManager.addElement(findViewById(R.id.reset_button), UiManager.methods.resetButton);
         }
     }
 

@@ -16,6 +16,7 @@ import com.martins.cubeit.OpenGL.Cube.Slices.RightSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.SliceManager;
 import com.martins.cubeit.OpenGL.Cube.Slices.TopSlice;
 import com.martins.cubeit.OpenGL.CubeTextureGenerator;
+import com.martins.cubeit.OpenGL.TransformationUtils;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class CubeObject {
             for (int curSlice2 = -sliceStart; curSlice2 <= sliceStart; curSlice2++) {
                 for (int curSlice3 = -sliceStart; curSlice3 <= sliceStart; curSlice3++) {
                     SubCubeObject subCube = new SubCubeObject(cubeId, context);
-                    subCube.translate(offset * curSlice1, offset * curSlice2, offset * curSlice3);
+                    TransformationUtils.translate(subCube, offset * curSlice1, offset * curSlice2, offset * curSlice3);
                     cubes.add(subCube);
                     cubeId++;
                 }
@@ -64,7 +65,7 @@ public class CubeObject {
                 for (int curSlice3 = sliceStart; curSlice3 >= -sliceStart; curSlice3--) {
                     SubCubeObject subCube = new SubCubeObject(subCubes.get(iter).getId(), context);
                     subCube.setBitmapTexture(CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
-                    subCube.translate(offset * curSlice3, offset * curSlice1, offset * curSlice2);
+                    TransformationUtils.translate(subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
                     cubes.add(subCube);
                     iter++;
                 }
@@ -164,13 +165,6 @@ public class CubeObject {
     }
 
     public void reset() {
-        topSlice = new TopSlice();
-        bottomSlice = new BottomSlice();
-        leftSlice = new LeftSlice();
-        rightSlice = new RightSlice();
-        frontSlice = new FrontSlice();
-        backSlice = new BackSlice();
-
-        initSlices();
+        sliceRotationManager.reset();
     }
 }

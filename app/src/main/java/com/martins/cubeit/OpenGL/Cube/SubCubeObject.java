@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.Matrix;
 
+import com.martins.cubeit.OpenGL.TransformationUtils;
+
 import java.io.IOException;
 
 import de.javagl.obj.Obj;
@@ -36,6 +38,6 @@ public class SubCubeObject extends BaseObject {
             e.printStackTrace();
         }
 
-        scale(0.1f);
+        TransformationUtils.scale(this, 0.03f);
     }
 }

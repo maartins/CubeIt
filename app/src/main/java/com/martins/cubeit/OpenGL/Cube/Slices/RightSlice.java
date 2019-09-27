@@ -1,22 +1,19 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
-import com.martins.cubeit.OpenGL.Cube.SubCubeObject;
 
 public class RightSlice extends CubeSlice {
 
-    @Override
-    public void rotate(int angle) {
-        for (SubCubeObject subCube : subCubes)
-            subCube.rotate(angle, new int[]{1, 0, 0});
+    public RightSlice() {
+        super(1, new int[]{1, 0, 0});
     }
 
     @Override
     void rotate(RotationDirection direction) {
         if (direction == RotationDirection.CCW)
-            rotate(getDefaultRotationSpeed());
+            rotate(getRotationSpeed());
         else
-            rotate(-getDefaultRotationSpeed());
+            rotate(-getRotationSpeed());
     }
 
     @Override

@@ -48,5 +48,8 @@ public final class GameManager implements UiButtonListener{
 
         if (caller.equals(UiManager.methods.solveButton))
             cubeObject.runRotationSequence(moves);
+
+        if (caller.equals(UiManager.methods.resetButton))
+            cubeObject.reset();
     }
 }

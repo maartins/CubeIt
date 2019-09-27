@@ -7,8 +7,8 @@ import android.util.Log;
 
 import com.martins.cubeit.OpenGL.Shader;
 import com.martins.cubeit.OpenGL.TextureHandle;
+import com.martins.cubeit.OpenGL.Vector3;
 import com.martins.cubeit.OpenGL.VirtualCamera;
-import com.martins.cubeit.PersonalUtils;
 import com.martins.cubeit.R;
 
 
@@ -39,15 +39,13 @@ public class BaseObject {
     private float[] modelMatrix = new float[16];
     private float[] rotationMatrix = new float[16];
 
-    private float x = 0.0f, y = 0.0f, z = 0.0f;
+    private Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
 
     private boolean isHidden = false;
     private boolean isFirstSetup = true;
 
     BaseObject(int id) {
         this.id = id;
-
-        scale(0.3f);
     }
 
     void setIndexBuffer (IntBuffer indexBuffer) {
@@ -67,57 +65,24 @@ public class BaseObject {
         this.bitmapTexture = bitmapTexture.copy(bitmapTexture.getConfig(), false);
     }
 
-    public int getId() {
-        return id;
-    }
-
     public void setIsObjectHidden(boolean isHidden) {
         this.isHidden = isHidden;
     }
 
-    public void translate(float x, float y, float z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
-        Matrix.translateM(modelMatrix, 0, x, y, z);
+    public void setPosition(Vector3 position) {
+        this.position = position;
     }
 
-    public void rotate(int angle, int[] axis) {
-        float[] rotationMatrixTemp = new float[16];
-        float x = this.x, y = this.y, z = this.z;
-        //Log.d(TAG, "x: " + x + " y: " + y + " z: " + z);
-        //PersonalUtils.displaySquareMatrix(modelMatrix, "model");
-
-        //x = modelMatrix[12];
-        //y = modelMatrix[13];
-        //z = modelMatrix[14];
-
-        //Log.d(TAG, "x: " + x + " y: " + y + " z: " + z);
-
-        translate(-x, -y, -z);
-
-        //modelMatrix[12] = 0;
-        //modelMatrix[13] = 0;
-        //modelMatrix[14] = 0;
-
-        //Matrix.rotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
-        Matrix.rotateM(modelMatrix, 0, angle, axis[0], axis[1], axis[2]);
-        //Matrix.setIdentityM(rotationMatrixTemp, 0);
-        //Matrix.setIdentityM(modelMatrix, 0);
-        //Matrix.rotateM(rotationMatrixTemp, 0, angle, axis[0], axis[1], axis[2]);
-        //Matrix.setRotateEulerM(rotationMatrixTemp, 0, angle * axis[0], angle * axis[1], angle * axis[2]);
-        //Matrix.setRotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
-        //Matrix.multiplyMM(rotationMatrix, 0, rotationMatrixTemp, 0, rotationMatrix, 0);
-        //Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotationMatrix, 0);
-        translate(x, y, z);
-        //modelMatrix[12] = x;
-        //modelMatrix[13] = y;
-        //modelMatrix[14] = z;
+    public int getId() {
+        return id;
     }
 
-    public void scale(float scaleFactor) {
-        Matrix.setIdentityM(modelMatrix, 0);
-        Matrix.scaleM(modelMatrix, 0, modelMatrix, 0, scaleFactor, scaleFactor, scaleFactor);
+    public float[] getModelMatrix() {
+        return modelMatrix;
+    }
+
+    public Vector3 getPosition() {
+        return position;
     }
 
     public void draw(VirtualCamera camera) {

@@ -9,7 +9,7 @@ public final class UiManager {
     private static final String TAG = "UiManager";
 
     public enum methods {
-        solveButton
+        resetButton, solveButton
     }
 
     private ArrayList<UiButtonListener> listeners = new ArrayList<>();

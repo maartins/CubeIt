@@ -2,6 +2,7 @@ package com.martins.cubeit.OpenGL.Cube.Slices;
 
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 import com.martins.cubeit.OpenGL.Cube.SubCubeObject;
+import com.martins.cubeit.OpenGL.TransformationUtils;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,14 @@ public abstract class CubeSlice {
 
     ArrayList<SubCubeObject> subCubes = new ArrayList<>();
 
-    private int defaultRotationSpeed = 1;
+    protected int[] rotationAxis;
+
+    protected int rotationSpeed;
+
+    protected CubeSlice(int rotationSpeed, int[] rotationAxis) {
+        this.rotationAxis = rotationAxis;
+        this.rotationSpeed = rotationSpeed;
+    }
 
     public void addRelations(CubeSlice top, CubeSlice left, CubeSlice right, CubeSlice bottom) {
         this.top = top;
@@ -53,8 +61,8 @@ public abstract class CubeSlice {
         updateSubCubeList();
     }
 
-    int getDefaultRotationSpeed() {
-        return defaultRotationSpeed;
+    int getRotationSpeed() {
+        return rotationSpeed;
     }
 
     void flipSubCubes_Internal(RotationDirection direction) {
@@ -116,7 +124,11 @@ public abstract class CubeSlice {
         subCubes.add(this.bot_r);
     }
 
-    abstract void rotate(int angle);
+    protected void rotate(int angle) {
+        for (SubCubeObject subCube : subCubes)
+            TransformationUtils.rotate(subCube, angle, rotationAxis);
+    }
+
     abstract void rotate(RotationDirection direction);
     abstract void flipSubCubes(RotationDirection direction);
 }
