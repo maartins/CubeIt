@@ -30,7 +30,7 @@ public final class GameManager implements UiButtonListener{
         Cube solverCube = new Cube(CubeType.Solved);
         cubeObject = new CubeObject(solverCube, context);
         drawables.addAll(cubeObject.getSubCube());
-        moves = ScrableReader.generateMoveSetFromString("U1F1");
+        moves = ScrableReader.generateMoveSetFromString("F1U1");
     }
 
     public void draw(VirtualCamera camera) {

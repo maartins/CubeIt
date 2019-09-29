@@ -1,12 +1,10 @@
 package com.martins.cubeit.OpenGL.Cube;
 
-import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import com.martins.cubeit.OpenGL.Shader;
-import com.martins.cubeit.OpenGL.TextureHandle;
+import com.martins.cubeit.OpenGL.Texture;
 import com.martins.cubeit.OpenGL.Vector3;
 import com.martins.cubeit.OpenGL.VirtualCamera;
 import com.martins.cubeit.R;
@@ -19,17 +17,12 @@ public class BaseObject {
     private static final String TAG = "BaseObject";
     private final int id;
 
-    private final TextureHandle textureHandle = new TextureHandle();
-    private Bitmap bitmapTexture = null;
+    private Texture texture;
 
     private IntBuffer indexBuffer = null;
     private FloatBuffer vertexBuffer = null;
-    private FloatBuffer textureBuffer = null;
-
-    private int texBufferSize = 0;
 
     private int positionHandle;
-    private int texCoordHandle;
     private int texHandle;
     private int mvpMatrixHandle;
 
@@ -56,13 +49,8 @@ public class BaseObject {
         this.vertexBuffer = vertexBuffer;
     }
 
-    void setTextureBuffer (FloatBuffer textureBuffer, int size) {
-        this.textureBuffer = textureBuffer;
-        this.texBufferSize = size;
-    }
-
-    void setBitmapTexture (Bitmap bitmapTexture) {
-        this.bitmapTexture = bitmapTexture.copy(bitmapTexture.getConfig(), false);
+    void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
     public void setIsObjectHidden(boolean isHidden) {
@@ -85,12 +73,17 @@ public class BaseObject {
         return position;
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
+
     public void draw(VirtualCamera camera) {
         if (isFirstSetup) {
             setupShaderProgram();
-            setupTexture();
             isFirstSetup = false;
         }
+
+        texture.setupTexture();
 
         if (!isHidden && isValid()) {
             Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
@@ -101,31 +94,36 @@ public class BaseObject {
             GLES20.glEnableVertexAttribArray(positionHandle);
             GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 3 * 4, vertexBuffer);
 
-            if (bitmapTexture != null) {
+            if (texture.hasBitmapTexture()) {
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle.getTextureId());
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture.getTextureId());
                 GLES20.glUniform1i(texHandle, 0);
             }
 
-            GLES20.glEnableVertexAttribArray(texCoordHandle);
+            GLES20.glEnableVertexAttribArray(texture.getTextureCoordHandle());
             GLES20.glVertexAttribPointer(
-                    texCoordHandle, texBufferSize, GLES20.GL_FLOAT, false, texBufferSize * 4, textureBuffer);
+                    texture.getTextureCoordHandle(),
+                    texture.getTextureBufferSize(),
+                    GLES20.GL_FLOAT,
+                    false,
+                    texture.getTextureBufferSize() * 4,
+                    texture.getTextureBuffer());
 
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0);
 
             GLES20.glDrawElements(
                     GLES20.GL_TRIANGLES, indexBuffer.capacity(), GLES20.GL_UNSIGNED_INT, indexBuffer);
             GLES20.glDisableVertexAttribArray(positionHandle);
-            GLES20.glDisableVertexAttribArray(texCoordHandle);
+            GLES20.glDisableVertexAttribArray(texture.getTextureCoordHandle());
         }
     }
 
     private void setupShaderProgram() {
-        if (bitmapTexture != null) {
+        if (texture.hasBitmapTexture()) {
             try {
                 objectShader.setProgram(R.raw.texture_vshader, R.raw.texture_fshader);
                 positionHandle = objectShader.getHandle("aPosition");
-                texCoordHandle = objectShader.getHandle("atexCoord");
+                texture.setTextureCoordHandle(objectShader.getHandle("atexCoord"));
                 texHandle = objectShader.getHandle("uTexture");
                 mvpMatrixHandle = objectShader.getHandle("uMVPMatrix");
             } catch (Exception e) {
@@ -135,7 +133,7 @@ public class BaseObject {
             try {
                 objectShader.setProgram(R.raw.color_vshader, R.raw.color_fshader);
                 positionHandle = objectShader.getHandle("aPosition");
-                texCoordHandle = objectShader.getHandle("aColor");
+                texture.setTextureCoordHandle(objectShader.getHandle("aColor"));
                 mvpMatrixHandle = objectShader.getHandle("uMVPMatrix");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,12 +141,7 @@ public class BaseObject {
         }
     }
 
-    private void setupTexture() {
-        if (bitmapTexture != null)
-            textureHandle.init2D(bitmapTexture);
-    }
-
     private boolean isValid() {
-        return ((indexBuffer != null && vertexBuffer != null) && textureBuffer != null);
+        return ((indexBuffer != null && vertexBuffer != null) && texture.hasBitmapTexture());
     }
 }

@@ -5,7 +5,7 @@ import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 public class FrontSlice extends CubeSlice {
 
     public FrontSlice() {
-        super(1, new int[]{0, 1, 0});
+        super(1, new int[]{0, 0, 1});
     }
 
     @Override

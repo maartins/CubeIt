@@ -64,8 +64,10 @@ public class CubeObject {
             for (int curSlice2 = -sliceStart; curSlice2 <= sliceStart; curSlice2++) {
                 for (int curSlice3 = sliceStart; curSlice3 >= -sliceStart; curSlice3--) {
                     SubCubeObject subCube = new SubCubeObject(subCubes.get(iter).getId(), context);
-                    subCube.setBitmapTexture(CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
-                    TransformationUtils.translate(subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
+                    subCube.getTexture().setBitmapTexture(
+                            CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
+                    TransformationUtils.translate(
+                            subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
                     cubes.add(subCube);
                     iter++;
                 }

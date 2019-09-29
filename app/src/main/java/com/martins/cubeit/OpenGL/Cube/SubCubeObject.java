@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.Matrix;
 
+import com.martins.cubeit.OpenGL.Texture;
 import com.martins.cubeit.OpenGL.TransformationUtils;
 
 import java.io.IOException;
@@ -20,24 +21,29 @@ public class SubCubeObject extends BaseObject {
     public SubCubeObject(int id, Context context) {
         super(id);
 
-        try {
-            Bitmap bitmapTexture = BitmapFactory.decodeStream(context.getAssets().open("textures/cube.png"));
+        Texture texture = new Texture();
 
-            if (bitmapTexture != null)
-                setBitmapTexture(bitmapTexture);
+        try {
+            Bitmap bitmapTexture = BitmapFactory.decodeStream(
+                    context.getAssets().open("textures/cube.png"));
+
+            if (bitmapTexture != null) {
+                texture.setBitmapTexture(bitmapTexture);
+            }
 
             Obj board = ObjUtils.convertToRenderable(
                     ObjReader.read(context.getAssets().open("cube.obj")));
 
             if (board != null) {
                 setIndexBuffer(ObjData.getFaceVertexIndices(board));
-                setTextureBuffer(ObjData.getTexCoords(board, 2), 2);
+                texture.setTextureBuffer(ObjData.getTexCoords(board, 2), 2);
                 setVertexBuffer(ObjData.getVertices(board));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        TransformationUtils.scale(this, 0.03f);
+        setTexture(texture);
+        TransformationUtils.scale(this, 0.1f);
     }
 }

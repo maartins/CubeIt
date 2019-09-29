@@ -1,5 +1,7 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
+import android.util.Log;
+
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 import com.martins.cubeit.OpenGL.Cube.SubCubeObject;
 import com.martins.cubeit.OpenGL.TransformationUtils;
