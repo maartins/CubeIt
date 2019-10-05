@@ -39,6 +39,7 @@ public class BaseObject {
 
     BaseObject(int id) {
         this.id = id;
+        Matrix.setIdentityM(rotationMatrix, 0);
     }
 
     void setIndexBuffer (IntBuffer indexBuffer) {
@@ -51,6 +52,11 @@ public class BaseObject {
 
     void setTexture(Texture texture) {
         this.texture = texture;
+    }
+
+    public void setRotationMatrix(float[] rotationMatrix) {
+        this.rotationMatrix = rotationMatrix;
+        Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotationMatrix, 0);
     }
 
     public void setIsObjectHidden(boolean isHidden) {
@@ -87,7 +93,6 @@ public class BaseObject {
 
         if (!isHidden && isValid()) {
             Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
-            //Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotationMatrix, 0);
             Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, modelMatrix, 0);
             objectShader.useProgram();
 

@@ -14,7 +14,7 @@ public final class TransformationUtils {
     }
 
     public static void rotate(BaseObject object, int angle, int[] axis) {
-        float[] rotationMatrixTemp = new float[16];
+        float[] rotationMatrix = new float[16];
         Vector3 pos = new Vector3(object.getPosition());
         //Log.d(TAG, "x: " + x + " y: " + y + " z: " + z);
         //PersonalUtils.displaySquareMatrix(modelMatrix, "model");
@@ -35,8 +35,9 @@ public final class TransformationUtils {
         //Quaternion q = new Quaternion(new Vector3(pos));
         //q.set(new Vector3(axis[0], axis[1], axis[2]), angle * (Math.PI / 180));
         //Matrix.multiplyMM(object.getModelMatrix(), 0, object.getModelMatrix(), 0, q.toMatrix(), 0);
-        Matrix.rotateM(object.getModelMatrix(), 0, angle, axis[0], axis[1], axis[2]);
-        //Matrix.setIdentityM(rotationMatrixTemp, 0);
+        Matrix.setIdentityM(rotationMatrix, 0);
+        Matrix.rotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
+        object.setRotationMatrix(rotationMatrix);
         //Matrix.setIdentityM(modelMatrix, 0);
         //Matrix.rotateM(rotationMatrixTemp, 0, angle, axis[0], axis[1], axis[2]);
         //Matrix.setRotateEulerM(rotationMatrixTemp, 0, angle * axis[0], angle * axis[1], angle * axis[2]);
