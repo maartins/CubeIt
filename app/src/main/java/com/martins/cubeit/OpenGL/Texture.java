@@ -21,8 +21,10 @@ public class Texture {
     }
 
     public void setBitmapTexture (Bitmap bitmapTexture) {
-        this.bitmapTexture = bitmapTexture.copy(bitmapTexture.getConfig(), false);
-        isNewTexture = true;
+        if (bitmapTexture != null) {
+            this.bitmapTexture = bitmapTexture.copy(bitmapTexture.getConfig(), false);
+            isNewTexture = true;
+        }
     }
 
     public void setTextureCoordHandle(int textureCoord) {
@@ -45,7 +47,7 @@ public class Texture {
         return textureBuffer;
     }
 
-    public boolean hasBitmapTexture() {
+    public boolean isValid() {
         return bitmapTexture != null;
     }
 

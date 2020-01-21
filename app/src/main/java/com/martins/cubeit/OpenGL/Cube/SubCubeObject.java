@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.Matrix;
 
+import com.martins.cubeit.OpenGL.Mesh;
 import com.martins.cubeit.OpenGL.Texture;
 import com.martins.cubeit.OpenGL.TransformationUtils;
 
@@ -18,32 +19,11 @@ import de.javagl.obj.ObjUtils;
 public class SubCubeObject extends BaseObject {
     private static final String TAG = "SubCubeObject";
 
-    public SubCubeObject(int id, Context context) {
+    public SubCubeObject(int id) {
         super(id);
 
-        Texture texture = new Texture();
-
-        try {
-            Bitmap bitmapTexture = BitmapFactory.decodeStream(
-                    context.getAssets().open("textures/cube.png"));
-
-            if (bitmapTexture != null) {
-                texture.setBitmapTexture(bitmapTexture);
-            }
-
-            Obj board = ObjUtils.convertToRenderable(
-                    ObjReader.read(context.getAssets().open("cube.obj")));
-
-            if (board != null) {
-                setIndexBuffer(ObjData.getFaceVertexIndices(board));
-                texture.setTextureBuffer(ObjData.getTexCoords(board, 2), 2);
-                setVertexBuffer(ObjData.getVertices(board));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        setTexture(texture);
+        setMesh(new Mesh());
+        setTexture(new Texture());
         TransformationUtils.scale(this, 0.1f);
     }
 }

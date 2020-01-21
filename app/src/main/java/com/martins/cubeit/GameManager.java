@@ -1,6 +1,8 @@
 package com.martins.cubeit;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 
@@ -12,9 +14,14 @@ import com.martins.cubeit.OpenGL.Cube.BaseObject;
 import com.martins.cubeit.OpenGL.Cube.CubeObject;
 import com.martins.cubeit.OpenGL.VirtualCamera;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
 
 public final class GameManager implements UiButtonListener{
     private static final String TAG = "GameManager";
@@ -27,9 +34,24 @@ public final class GameManager implements UiButtonListener{
         UiManager.addUiButtonListener(this);
 
         //Cube mainCube = new ScrableReader.generateCubeFromString(ScrableGenerator.generate(1));
-        Cube solverCube = new Cube(CubeType.Solved);
-        cubeObject = new CubeObject(solverCube, context);
+
+        Bitmap bitmapTexture = null;
+        try {
+             bitmapTexture = BitmapFactory.decodeStream(context.getAssets().open("textures/cube.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Obj cubeMesh = null;
+        try {
+            cubeMesh = ObjUtils.convertToRenderable(ObjReader.read(context.getAssets().open("cube.obj")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        cubeObject = new CubeObject(new Cube(CubeType.Solved), cubeMesh);
         drawables.addAll(cubeObject.getSubCube());
+
         moves = ScrableReader.generateMoveSetFromString("F1U1");
     }
 

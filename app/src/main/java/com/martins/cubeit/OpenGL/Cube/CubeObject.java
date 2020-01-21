@@ -1,6 +1,8 @@
 package com.martins.cubeit.OpenGL.Cube;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.martins.cubeit.CubeWare.CubeData.Position;
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
@@ -18,7 +20,13 @@ import com.martins.cubeit.OpenGL.Cube.Slices.TopSlice;
 import com.martins.cubeit.OpenGL.CubeTextureGenerator;
 import com.martins.cubeit.OpenGL.TransformationUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjData;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
 
 public class CubeObject {
     private static final String TAG = "CubeObject";
@@ -34,7 +42,7 @@ public class CubeObject {
 
     private SliceManager sliceRotationManager = new SliceManager(this);
 
-    public CubeObject(int sliceCount, Context context) {
+    public CubeObject(int sliceCount, Bitmap texture, Obj object) {
         float offset = 2.1f;
         int sliceStart = (int) Math.floor(sliceCount / 2.0f);
         int cubeId = 0;
@@ -42,7 +50,11 @@ public class CubeObject {
         for (int curSlice1 = -sliceStart; curSlice1 <= sliceStart; curSlice1++) {
             for (int curSlice2 = -sliceStart; curSlice2 <= sliceStart; curSlice2++) {
                 for (int curSlice3 = -sliceStart; curSlice3 <= sliceStart; curSlice3++) {
-                    SubCubeObject subCube = new SubCubeObject(cubeId, context);
+                    SubCubeObject subCube = new SubCubeObject(cubeId);
+                    subCube.getTexture().setBitmapTexture(texture);
+                    subCube.getTexture().setTextureBuffer(ObjData.getTexCoords(object, 2), 2);
+                    subCube.getMesh().setIndexBuffer(ObjData.getFaceVertexIndices(object));
+                    subCube.getMesh().setVertexBuffer(ObjData.getVertices(object));
                     TransformationUtils.translate(subCube, offset * curSlice1, offset * curSlice2, offset * curSlice3);
                     cubes.add(subCube);
                     cubeId++;
@@ -53,7 +65,7 @@ public class CubeObject {
         initSlices();
     }
 
-    public CubeObject(Cube cube, Context context) {
+    public CubeObject(Cube cube, Obj object) {
         ArrayList<SubCube> subCubes = cube.getSubCubes();
 
         float offset = 2.1f;
@@ -63,9 +75,11 @@ public class CubeObject {
         for (int curSlice1 = sliceStart; curSlice1 >= -sliceStart; curSlice1--) {
             for (int curSlice2 = -sliceStart; curSlice2 <= sliceStart; curSlice2++) {
                 for (int curSlice3 = sliceStart; curSlice3 >= -sliceStart; curSlice3--) {
-                    SubCubeObject subCube = new SubCubeObject(subCubes.get(iter).getId(), context);
-                    subCube.getTexture().setBitmapTexture(
-                            CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
+                    SubCubeObject subCube = new SubCubeObject(subCubes.get(iter).getId());
+                    subCube.getTexture().setTextureBuffer(ObjData.getTexCoords(object, 2), 2);
+                    subCube.getMesh().setIndexBuffer(ObjData.getFaceVertexIndices(object));
+                    subCube.getMesh().setVertexBuffer(ObjData.getVertices(object));
+                    subCube.getTexture().setBitmapTexture(CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
                     TransformationUtils.translate(
                             subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
                     cubes.add(subCube);

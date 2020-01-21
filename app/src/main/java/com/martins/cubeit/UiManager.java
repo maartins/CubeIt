@@ -1,5 +1,6 @@
 package com.martins.cubeit;
 
+import android.util.Log;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public final class UiManager {
     private UiManager() {}
 
     public static void addElement(Button button, methods id) {
+        Log.d(TAG, "UI element added.");
+
         button.setOnClickListener(v -> {
             for (UiButtonListener l : SingletonHelper.INSTANCE.listeners) {
                 l.onButtonClick(id);
@@ -25,6 +28,7 @@ public final class UiManager {
     }
 
     public static void addUiButtonListener(UiButtonListener listener) {
+        Log.d(TAG, "UI listener added.");
         SingletonHelper.INSTANCE.listeners.add(listener);
     }
 

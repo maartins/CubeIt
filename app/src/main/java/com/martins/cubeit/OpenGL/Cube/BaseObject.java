@@ -3,6 +3,7 @@ package com.martins.cubeit.OpenGL.Cube;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.martins.cubeit.OpenGL.Mesh;
 import com.martins.cubeit.OpenGL.Shader;
 import com.martins.cubeit.OpenGL.Texture;
 import com.martins.cubeit.OpenGL.Vector3;
@@ -18,9 +19,7 @@ public class BaseObject {
     private final int id;
 
     private Texture texture;
-
-    private IntBuffer indexBuffer = null;
-    private FloatBuffer vertexBuffer = null;
+    private Mesh mesh;
 
     private int positionHandle;
     private int texHandle;
@@ -42,16 +41,12 @@ public class BaseObject {
         Matrix.setIdentityM(rotationMatrix, 0);
     }
 
-    void setIndexBuffer (IntBuffer indexBuffer) {
-        this.indexBuffer = indexBuffer;
-    }
-
-    void setVertexBuffer (FloatBuffer vertexBuffer) {
-        this.vertexBuffer = vertexBuffer;
-    }
-
     void setTexture(Texture texture) {
         this.texture = texture;
+    }
+
+    void setMesh(Mesh mesh) {
+        this.mesh = mesh;
     }
 
     public void setRotationMatrix(float[] rotationMatrix) {
@@ -83,6 +78,10 @@ public class BaseObject {
         return texture;
     }
 
+    public Mesh getMesh() {
+        return mesh;
+    }
+
     public void draw(VirtualCamera camera) {
         if (isFirstSetup) {
             setupShaderProgram();
@@ -97,9 +96,9 @@ public class BaseObject {
             objectShader.useProgram();
 
             GLES20.glEnableVertexAttribArray(positionHandle);
-            GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 3 * 4, vertexBuffer);
+            GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 3 * 4, mesh.getVertexBuffer());
 
-            if (texture.hasBitmapTexture()) {
+            if (texture.isValid()) {
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture.getTextureId());
                 GLES20.glUniform1i(texHandle, 0);
@@ -117,14 +116,14 @@ public class BaseObject {
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0);
 
             GLES20.glDrawElements(
-                    GLES20.GL_TRIANGLES, indexBuffer.capacity(), GLES20.GL_UNSIGNED_INT, indexBuffer);
+                    GLES20.GL_TRIANGLES, mesh.getIndexBuffer().capacity(), GLES20.GL_UNSIGNED_INT, mesh.getIndexBuffer());
             GLES20.glDisableVertexAttribArray(positionHandle);
             GLES20.glDisableVertexAttribArray(texture.getTextureCoordHandle());
         }
     }
 
     private void setupShaderProgram() {
-        if (texture.hasBitmapTexture()) {
+        if (texture.isValid()) {
             try {
                 objectShader.setProgram(R.raw.texture_vshader, R.raw.texture_fshader);
                 positionHandle = objectShader.getHandle("aPosition");
@@ -147,6 +146,6 @@ public class BaseObject {
     }
 
     private boolean isValid() {
-        return ((indexBuffer != null && vertexBuffer != null) && texture.hasBitmapTexture());
+        return mesh.isValid() && texture.isValid();
     }
 }
