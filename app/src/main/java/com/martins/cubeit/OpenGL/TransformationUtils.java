@@ -32,12 +32,13 @@ public final class TransformationUtils {
         //modelMatrix[14] = 0;
 
         //Matrix.rotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
-        //Quaternion q = new Quaternion(new Vector3(pos));
-        //q.set(new Vector3(axis[0], axis[1], axis[2]), angle * (Math.PI / 180));
-        //Matrix.multiplyMM(object.getModelMatrix(), 0, object.getModelMatrix(), 0, q.toMatrix(), 0);
-        Matrix.setIdentityM(rotationMatrix, 0);
-        Matrix.rotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
-        object.setRotationMatrix(rotationMatrix);
+        Quaternion q = new Quaternion(new Vector3(pos));
+        q.set(new Vector3(-axis[0], -axis[1], -axis[2]), -angle);
+        q.normalize();
+        Matrix.multiplyMM(object.getModelMatrix(), 0, object.getModelMatrix(), 0, q.toMatrix(), 0);
+        //Matrix.setIdentityM(rotationMatrix, 0);
+        //Matrix.rotateM(rotationMatrix, 0, angle, axis[0], axis[1], axis[2]);
+        //object.setRotationMatrix(rotationMatrix);
         //Matrix.setIdentityM(modelMatrix, 0);
         //Matrix.rotateM(rotationMatrixTemp, 0, angle, axis[0], axis[1], axis[2]);
         //Matrix.setRotateEulerM(rotationMatrixTemp, 0, angle * axis[0], angle * axis[1], angle * axis[2]);

@@ -27,7 +27,7 @@ public final class Quaternion {
     }
 
     public Quaternion(Vector3 axis) {
-        set(axis, (double) 0);
+        set(axis, (double) 1);
     }
 
     /**
@@ -35,11 +35,36 @@ public final class Quaternion {
      * @param angle the rotation angle.
      */
     public void set(Vector3 axis, double angle) {
-        double s = Math.sin(angle / 2);
-        w = Math.cos(angle / 2);
+        double angleRad = Math.toRadians(angle * 0.5);
+        double s = Math.sin(angleRad);
+        w = Math.cos(angleRad);
         x = axis.getX() * s;
         y = axis.getY() * s;
         z = axis.getZ() * s;
+    }
+
+    public void normalize() {
+        double x = this.x * this.x;
+        double y = this.y * this.y;
+        double z = this.z * this.z;
+        double w = this.w * this.w;
+        double magnitude = Math.sqrt(x + y + z + w);
+
+        if (magnitude != 0) {
+            this.x = this.x / magnitude;
+            this.y = this.y / magnitude;
+            this.z = this.z / magnitude;
+            this.w = this.w / magnitude;
+        } else {
+            this.x = 0;
+            this.y = 0;
+            this.z = 0;
+
+            if (this.w > 0)
+                this.w = 1;
+            else
+                this.w = -1;
+        }
     }
 
     void multiply(Quaternion q) {

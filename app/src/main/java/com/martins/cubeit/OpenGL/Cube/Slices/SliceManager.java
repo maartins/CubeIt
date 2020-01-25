@@ -41,7 +41,7 @@ public class SliceManager {
             Log.d(TAG, "Rotation recieved");
             allMoves.forEach(o -> Log.d(TAG, o.toString()));
 
-            angle = cube.getTopSlice().getRotationSpeed();
+            angle = cube.getSliceByPosition(Position.Top).getRotationSpeed();
             curAngle = 0;
             maxAngle = 90;
 
@@ -97,7 +97,7 @@ public class SliceManager {
         cube.getSliceByPosition(position).flipSubCubes(direction);
     }
 
-    public void reset() {
+    public void reverse() {
         if (allMoves != null) {
             if (!allMoves.isEmpty()) {
                 Log.d(TAG, "Resetting whole cube.");

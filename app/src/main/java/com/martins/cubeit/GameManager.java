@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.View;
 
 import com.martins.cubeit.CubeWare.CubeData.CubeType;
 import com.martins.cubeit.CubeWare.CubeData.SliceRotatationResult;
@@ -15,8 +14,6 @@ import com.martins.cubeit.OpenGL.Cube.CubeObject;
 import com.martins.cubeit.OpenGL.VirtualCamera;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import de.javagl.obj.Obj;
@@ -29,6 +26,7 @@ public final class GameManager implements UiButtonListener{
     private CubeObject cubeObject = null;
     private ArrayList<SliceRotatationResult> moves;
     private ArrayList<BaseObject> drawables = new ArrayList<>();
+    private Obj cubeMesh = null;
 
     public void init(Context context) {
         UiManager.addUiButtonListener(this);
@@ -42,17 +40,13 @@ public final class GameManager implements UiButtonListener{
             e.printStackTrace();
         }
 
-        Obj cubeMesh = null;
         try {
             cubeMesh = ObjUtils.convertToRenderable(ObjReader.read(context.getAssets().open("cube.obj")));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        cubeObject = new CubeObject(new Cube(CubeType.Solved), cubeMesh);
-        drawables.addAll(cubeObject.getSubCube());
-
-        moves = ScrableReader.generateMoveSetFromString("F1U1");
+        newCube();
     }
 
     public void draw(VirtualCamera camera) {
@@ -61,7 +55,7 @@ public final class GameManager implements UiButtonListener{
     }
 
     public void update() {
-        cubeObject.rotationUpdate();
+        cubeObject.getSliceRotationManager().rotate();
     }
 
     @Override
@@ -69,9 +63,18 @@ public final class GameManager implements UiButtonListener{
         Log.d(TAG, "Button clicked.");
 
         if (caller.equals(UiManager.methods.solveButton))
-            cubeObject.runRotationSequence(moves);
+            cubeObject.getSliceRotationManager().startRotation(moves);
 
-        if (caller.equals(UiManager.methods.resetButton))
-            cubeObject.reset();
+        if (caller.equals(UiManager.methods.resetButton)) {
+            cubeObject.getSubCubes().forEach(s -> s.setIsObjectHidden(true));
+            newCube();
+        }
+    }
+
+    private void newCube() {
+        cubeObject = new CubeObject(new Cube(CubeType.Solved), cubeMesh);
+        drawables.addAll(cubeObject.getSubCubes());
+
+        moves = ScrableReader.generateMoveSetFromString("F1U1");
     }
 }

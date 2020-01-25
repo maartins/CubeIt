@@ -124,36 +124,8 @@ public class CubeObject {
         backSlice.addBottomSubCubes(cubes.get(26), cubes.get(25), cubes.get(24));
     }
 
-    public void runRotationSequence(ArrayList<SliceRotatationResult> moves) {
-        sliceRotationManager.startRotation(moves);
-    }
-
-    public void rotationUpdate() {
-        sliceRotationManager.rotate();
-    }
-
-    public TopSlice getTopSlice() {
-        return topSlice;
-    }
-
-    public BottomSlice getBottomSlice() {
-        return bottomSlice;
-    }
-
-    public LeftSlice getLeftSlice() {
-        return leftSlice;
-    }
-
-    public RightSlice getRightSlice() {
-        return rightSlice;
-    }
-
-    public FrontSlice getFrontSlice() {
-        return frontSlice;
-    }
-
-    public BackSlice getBackSlice() {
-        return backSlice;
+    public SliceManager getSliceRotationManager() {
+        return sliceRotationManager;
     }
 
     public CubeSlice getSliceByPosition(Position position) {
@@ -176,11 +148,7 @@ public class CubeObject {
         }
     }
 
-    public ArrayList<SubCubeObject> getSubCube() {
+    public ArrayList<SubCubeObject> getSubCubes() {
         return cubes;
-    }
-
-    public void reset() {
-        sliceRotationManager.reset();
     }
 }
