@@ -17,11 +17,11 @@ public abstract class CubeSlice {
 
     protected CubeSlice top, left, right, bottom;
 
-    ArrayList<SubCubeObject> subCubes = new ArrayList<>();
+    private ArrayList<SubCubeObject> subCubes = new ArrayList<>();
 
-    protected int[] rotationAxis;
+    private int[] rotationAxis;
 
-    protected int rotationSpeed;
+    private int rotationSpeed;
 
     protected CubeSlice(int rotationSpeed, int[] rotationAxis) {
         this.rotationAxis = rotationAxis;
@@ -72,7 +72,7 @@ public abstract class CubeSlice {
         SubCubeObject tmid_l = mid_l, tmid_m = mid_m, tmid_r = mid_r;
         SubCubeObject tbot_l = bot_l, tbot_m = bot_m, tbot_r = bot_r;
 
-        if(direction == RotationDirection.CCW) {
+        if(direction == RotationDirection.ACW) {
             top_l = tbot_l; top_m = tmid_l; top_r = ttop_l;
             mid_l = tbot_m; mid_m = tmid_m; mid_r = ttop_m;
             bot_l = tbot_r; bot_m = tmid_r; bot_r = ttop_r;
@@ -131,6 +131,16 @@ public abstract class CubeSlice {
             TransformationUtils.rotate(subCube, angle, rotationAxis);
     }
 
+    public ArrayList<SubCubeObject> getSubCubes() {
+        return subCubes;
+    }
+
     abstract void rotate(RotationDirection direction);
     abstract void flipSubCubes(RotationDirection direction);
+
+    public String toString() {
+        return "tl: " + top_l.getId() + "\t tm: " + top_m.getId() + "\t tr: " + top_r.getId() + "\n" +
+               "ml: " + mid_l.getId() + "\t mm: " + mid_m.getId() + "\t mr: " + mid_r.getId() + "\n" +
+               "bl: " + bot_l.getId() + "\t bm: " + bot_m.getId() + "\t br: " + bot_r.getId();
+    }
 }

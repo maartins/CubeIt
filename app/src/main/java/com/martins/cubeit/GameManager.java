@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.martins.cubeit.CubeWare.CubeData.CubeType;
+import com.martins.cubeit.CubeWare.CubeData.Position;
 import com.martins.cubeit.CubeWare.CubeData.SliceRotatationResult;
 import com.martins.cubeit.CubeWare.Main.Cube;
 import com.martins.cubeit.CubeWare.Main.ScrableReader;
@@ -75,6 +76,10 @@ public final class GameManager implements UiButtonListener{
         cubeObject = new CubeObject(new Cube(CubeType.Solved), cubeMesh);
         drawables.addAll(cubeObject.getSubCubes());
 
-        moves = ScrableReader.generateMoveSetFromString("F1U1");
+        moves = ScrableReader.generateMoveSetFromString("F3U3");
+
+        cubeObject.hideCube();
+        cubeObject.showSlice(Position.Top);
+        cubeObject.showSlice(Position.Front);
     }
 }

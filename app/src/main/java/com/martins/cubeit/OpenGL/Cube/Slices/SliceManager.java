@@ -1,5 +1,6 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
+import android.app.slice.Slice;
 import android.util.Log;
 
 import com.martins.cubeit.CubeWare.CubeData.Position;
@@ -38,7 +39,7 @@ public class SliceManager {
                 allMoves.add(new SliceRotatationResult(result));
             }
 
-            Log.d(TAG, "Rotation recieved");
+            Log.d(TAG, "Rotation received");
             allMoves.forEach(o -> Log.d(TAG, o.toString()));
 
             angle = cube.getSliceByPosition(Position.Top).getRotationSpeed();
@@ -54,7 +55,9 @@ public class SliceManager {
         if (isRotating) {
             if (currentMove != null) {
                 if (rotateSlice(currentMove.slice, currentMove.rotationDirection)) {
+                    Log.d(TAG, cube.getSliceByPosition(Position.Top).toString());
                     flipSubCubes(currentMove.slice, currentMove.rotationDirection);
+                    Log.d(TAG, cube.getSliceByPosition(Position.Top).toString());
                     currentMove = nextMove();
                 }
             } else {

@@ -51,7 +51,10 @@ public class BaseObject {
 
     public void setRotationMatrix(float[] rotationMatrix) {
         this.rotationMatrix = rotationMatrix;
-        Matrix.multiplyMM(modelMatrix, 0, modelMatrix, 0, rotationMatrix, 0);
+    }
+
+    public float[] getRotationMatrix() {
+        return rotationMatrix;
     }
 
     public void setIsObjectHidden(boolean isHidden) {
@@ -74,11 +77,11 @@ public class BaseObject {
         return position;
     }
 
-    public Texture getTexture() {
+    Texture getTexture() {
         return texture;
     }
 
-    public Mesh getMesh() {
+    Mesh getMesh() {
         return mesh;
     }
 
@@ -105,18 +108,11 @@ public class BaseObject {
             }
 
             GLES20.glEnableVertexAttribArray(texture.getTextureCoordHandle());
-            GLES20.glVertexAttribPointer(
-                    texture.getTextureCoordHandle(),
-                    texture.getTextureBufferSize(),
-                    GLES20.GL_FLOAT,
-                    false,
-                    texture.getTextureBufferSize() * 4,
-                    texture.getTextureBuffer());
+            GLES20.glVertexAttribPointer(texture.getTextureCoordHandle(), texture.getTextureBufferSize(), GLES20.GL_FLOAT, false, texture.getTextureBufferSize() * 4, texture.getTextureBuffer());
 
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0);
 
-            GLES20.glDrawElements(
-                    GLES20.GL_TRIANGLES, mesh.getIndexBuffer().capacity(), GLES20.GL_UNSIGNED_INT, mesh.getIndexBuffer());
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, mesh.getIndexBuffer().capacity(), GLES20.GL_UNSIGNED_INT, mesh.getIndexBuffer());
             GLES20.glDisableVertexAttribArray(positionHandle);
             GLES20.glDisableVertexAttribArray(texture.getTextureCoordHandle());
         }

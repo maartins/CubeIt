@@ -3,6 +3,7 @@ package com.martins.cubeit.OpenGL.Cube;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.martins.cubeit.CubeWare.CubeData.Position;
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
@@ -80,10 +81,11 @@ public class CubeObject {
                     subCube.getMesh().setIndexBuffer(ObjData.getFaceVertexIndices(object));
                     subCube.getMesh().setVertexBuffer(ObjData.getVertices(object));
                     subCube.getTexture().setBitmapTexture(CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
-                    TransformationUtils.translate(
-                            subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
+                    TransformationUtils.translate(subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
                     cubes.add(subCube);
                     iter++;
+
+                    Log.d(TAG, "x: " + curSlice3 + "\t y: " + curSlice1 + "\t z: " + curSlice3 + "\t id: " + subCube.getId());
                 }
             }
         }
@@ -122,6 +124,16 @@ public class CubeObject {
         backSlice.addTopSubCubes(cubes.get(8), cubes.get(7), cubes.get(6));
         backSlice.addMidSubCubes(cubes.get(17), cubes.get(16), cubes.get(15));
         backSlice.addBottomSubCubes(cubes.get(26), cubes.get(25), cubes.get(24));
+
+        Log.d(TAG, frontSlice.toString());
+    }
+
+    public void hideCube() {
+        this.getSubCubes().forEach(sc -> sc.setIsObjectHidden(true));
+    }
+
+    public void showSlice(Position position) {
+        getSliceByPosition(position).getSubCubes().forEach(sc -> sc.setIsObjectHidden(false));
     }
 
     public SliceManager getSliceRotationManager() {
