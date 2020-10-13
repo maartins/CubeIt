@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CubeIt</string>
+    <string name="reset">Reset</string>
+    <string name="solve">Solve</string>
 </resources>

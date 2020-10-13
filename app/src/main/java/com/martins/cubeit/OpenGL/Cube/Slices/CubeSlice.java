@@ -1,10 +1,12 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 import com.martins.cubeit.OpenGL.Cube.SubCubeObject;
 import com.martins.cubeit.OpenGL.TransformationUtils;
+import com.martins.cubeit.OpenGL.Vector3;
 
 import java.util.ArrayList;
 
@@ -19,13 +21,14 @@ public abstract class CubeSlice {
 
     private ArrayList<SubCubeObject> subCubes = new ArrayList<>();
 
-    private int[] rotationAxis;
-
+    private Vector3 rotationAxis;
+    private Vector3 sliceOrigin;
     private int rotationSpeed;
 
-    protected CubeSlice(int rotationSpeed, int[] rotationAxis) {
-        this.rotationAxis = rotationAxis;
+    protected CubeSlice(int rotationSpeed, Vector3 rotationAxis, Vector3 sliceOrigin) {
         this.rotationSpeed = rotationSpeed;
+        this.rotationAxis = rotationAxis;
+        this.sliceOrigin = sliceOrigin;
     }
 
     public void addRelations(CubeSlice top, CubeSlice left, CubeSlice right, CubeSlice bottom) {
@@ -111,6 +114,8 @@ public abstract class CubeSlice {
         this.mid_m = mid_m;
         this.mid_r = mid_r;
 
+        sliceOrigin = new Vector3(mid_m.getOrigin());
+
         subCubes.add(this.mid_l);
         subCubes.add(this.mid_m);
         subCubes.add(this.mid_r);
@@ -131,6 +136,11 @@ public abstract class CubeSlice {
             TransformationUtils.rotate(subCube, angle, rotationAxis);
     }
 
+    public void setOrigin() {
+        for (SubCubeObject subCube : subCubes)
+            subCube.setOrigin(sliceOrigin);
+    }
+
     public ArrayList<SubCubeObject> getSubCubes() {
         return subCubes;
     }
@@ -138,6 +148,8 @@ public abstract class CubeSlice {
     abstract void rotate(RotationDirection direction);
     abstract void flipSubCubes(RotationDirection direction);
 
+    @NonNull
+    @Override
     public String toString() {
         return "tl: " + top_l.getId() + "\t tm: " + top_m.getId() + "\t tr: " + top_r.getId() + "\n" +
                "ml: " + mid_l.getId() + "\t mm: " + mid_m.getId() + "\t mr: " + mid_r.getId() + "\n" +

@@ -1,13 +1,9 @@
 package com.martins.cubeit.OpenGL.Cube;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.martins.cubeit.CubeWare.CubeData.Position;
-import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
-import com.martins.cubeit.CubeWare.CubeData.SliceRotatationResult;
 import com.martins.cubeit.CubeWare.Main.Cube;
 import com.martins.cubeit.CubeWare.SubCubes.SubCube;
 import com.martins.cubeit.OpenGL.Cube.Slices.BackSlice;
@@ -18,16 +14,13 @@ import com.martins.cubeit.OpenGL.Cube.Slices.LeftSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.RightSlice;
 import com.martins.cubeit.OpenGL.Cube.Slices.SliceManager;
 import com.martins.cubeit.OpenGL.Cube.Slices.TopSlice;
-import com.martins.cubeit.OpenGL.CubeTextureGenerator;
 import com.martins.cubeit.OpenGL.TransformationUtils;
+import com.martins.cubeit.OpenGL.Vector3;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjData;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
 
 public class CubeObject {
     private static final String TAG = "CubeObject";
@@ -56,6 +49,7 @@ public class CubeObject {
                     subCube.getTexture().setTextureBuffer(ObjData.getTexCoords(object, 2), 2);
                     subCube.getMesh().setIndexBuffer(ObjData.getFaceVertexIndices(object));
                     subCube.getMesh().setVertexBuffer(ObjData.getVertices(object));
+                    subCube.setOrigin(new Vector3(offset * curSlice1, offset * curSlice2, offset * curSlice3));
                     TransformationUtils.translate(subCube, offset * curSlice1, offset * curSlice2, offset * curSlice3);
                     cubes.add(subCube);
                     cubeId++;
@@ -81,11 +75,10 @@ public class CubeObject {
                     subCube.getMesh().setIndexBuffer(ObjData.getFaceVertexIndices(object));
                     subCube.getMesh().setVertexBuffer(ObjData.getVertices(object));
                     subCube.getTexture().setBitmapTexture(CubeTextureGenerator.generateFromSubCube(subCubes.get(iter), 256, 256));
+                    subCube.setOrigin(new Vector3(offset * curSlice1, offset * curSlice2, offset * curSlice3));
                     TransformationUtils.translate(subCube, offset * curSlice3, offset * curSlice1, offset * curSlice2);
                     cubes.add(subCube);
                     iter++;
-
-                    Log.d(TAG, "x: " + curSlice3 + "\t y: " + curSlice1 + "\t z: " + curSlice3 + "\t id: " + subCube.getId());
                 }
             }
         }

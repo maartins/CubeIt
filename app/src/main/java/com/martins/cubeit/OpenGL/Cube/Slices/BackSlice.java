@@ -1,11 +1,12 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
+import com.martins.cubeit.OpenGL.Vector3;
 
 public class BackSlice extends CubeSlice {
 
     public BackSlice() {
-        super(1, new int[]{0, 0, 1});
+        super(1, new Vector3(0, 0, 1), new Vector3(0, 0, 0));
     }
 
     @Override

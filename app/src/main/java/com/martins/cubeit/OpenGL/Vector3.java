@@ -16,6 +16,8 @@ package com.martins.cubeit.OpenGL;
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import android.support.annotation.NonNull;
+
 public final class Vector3 {
     private float x,y,z;
 
@@ -55,6 +57,24 @@ public final class Vector3 {
         z = (float) 0;
     }
 
+    public void add(Vector3 vec) {
+        x += vec.getX();
+        y += vec.getY();
+        z += vec.getZ();
+    }
+
+    public void subtract(Vector3 vec) {
+        x -= vec.getX();
+        y -= vec.getY();
+        z -= vec.getZ();
+    }
+
+    public void negate() {
+        x = -x;
+        y = -y;
+        z = -z;
+    }
+
     float magnitude() {
         return (float) Math.sqrt(x * x + y * y + z * z);
     }
@@ -64,5 +84,11 @@ public final class Vector3 {
         x /= mag;
         y /= mag;
         z /= mag;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "vec3-> x:" + x + " y:" + y + " z:" + z;
     }
 }

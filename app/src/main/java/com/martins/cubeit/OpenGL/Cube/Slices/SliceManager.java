@@ -1,6 +1,5 @@
 package com.martins.cubeit.OpenGL.Cube.Slices;
 
-import android.app.slice.Slice;
 import android.util.Log;
 
 import com.martins.cubeit.CubeWare.CubeData.Position;
@@ -20,7 +19,7 @@ public class SliceManager {
     private boolean isReseting = false;
     private boolean shouldRepeat = false;
 
-    private ArrayList<SliceRotatationResult> curMoves = new ArrayList<>();
+    private ArrayList<SliceRotatationResult> currentMoves = new ArrayList<>();
     private ArrayList<SliceRotatationResult> allMoves = new ArrayList<>();
     private SliceRotatationResult currentMove = null;
 
@@ -35,7 +34,7 @@ public class SliceManager {
     public void startRotation(ArrayList<SliceRotatationResult> moves) {
         if ((!isRotating && moves != null) && !isReseting) {
             for (SliceRotatationResult result : moves) {
-                curMoves.add(new SliceRotatationResult(result));
+                currentMoves.add(new SliceRotatationResult(result));
                 allMoves.add(new SliceRotatationResult(result));
             }
 
@@ -55,9 +54,9 @@ public class SliceManager {
         if (isRotating) {
             if (currentMove != null) {
                 if (rotateSlice(currentMove.slice, currentMove.rotationDirection)) {
-                    Log.d(TAG, cube.getSliceByPosition(Position.Top).toString());
+                    //Log.d(TAG, cube.getSliceByPosition(Position.Top).toString());
                     flipSubCubes(currentMove.slice, currentMove.rotationDirection);
-                    Log.d(TAG, cube.getSliceByPosition(Position.Top).toString());
+                    //Log.d(TAG, cube.getSliceByPosition(Position.Top).toString());
                     currentMove = nextMove();
                 }
             } else {
@@ -67,12 +66,14 @@ public class SliceManager {
     }
 
     private SliceRotatationResult nextMove() {
-        if (curMoves == null || curMoves.isEmpty())
+        if (currentMoves == null || currentMoves.isEmpty())
             return null;
 
-        Log.d(TAG, "nextMove: " + curMoves.get(0));
+        cube.getSliceByPosition(currentMoves.get(0).slice).setOrigin();
 
-        return curMoves.remove(0);
+        Log.d(TAG, "nextMove: " + currentMoves.get(0));
+
+        return currentMoves.remove(0);
     }
 
     private void cleanUp() {
@@ -80,13 +81,13 @@ public class SliceManager {
         allMoves.forEach(o -> Log.d(TAG, o.toString()));
         isRotating = false;
         isReseting = false;
-        curMoves.clear();
+        currentMoves.clear();
     }
 
     private boolean rotateSlice(Position position, RotationDirection direction) {
         cube.getSliceByPosition(position).rotate(direction);
 
-        curAngle += angle;
+        curAngle += angle / 3;
 
         if (curAngle >= maxAngle) {
             curAngle = 0;
@@ -105,9 +106,9 @@ public class SliceManager {
             if (!allMoves.isEmpty()) {
                 Log.d(TAG, "Resetting whole cube.");
 
-                curMoves.clear();
+                currentMoves.clear();
                 Collections.reverse(allMoves);
-                allMoves.forEach(result -> curMoves.add(new SliceRotatationResult(result)));
+                allMoves.forEach(result -> currentMoves.add(new SliceRotatationResult(result)));
                 Collections.reverse(allMoves);
 
                 currentMove = nextMove();

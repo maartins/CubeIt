@@ -1,4 +1,4 @@
-package com.martins.cubeit.OpenGL;
+package com.martins.cubeit.OpenGL.Cube;
 
 import android.graphics.Bitmap;
 

@@ -3,31 +3,41 @@ package com.martins.cubeit.OpenGL;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.martins.cubeit.OpenGL.Cube.BaseObject;
-
 public final class TransformationUtils {
     private static final String TAG = "TransformationUtils";
 
     private TransformationUtils() {}
 
     public static void translate(BaseObject object, float x, float y, float z) {
-        object.setPosition(new Vector3(x, y, z));
+        Vector3 newPos = new Vector3(object.getPosition());
+        newPos.add(new Vector3(x, y, z));
+        object.setPosition(newPos);
         Matrix.translateM(object.getModelMatrix(), 0, x, y, z);
     }
 
-    public static void rotate(BaseObject object, int angle, int[] axis) {
-        Vector3 pos = new Vector3(object.getPosition());
+    public static void rotate(BaseObject object, int angle, Vector3 axis) {
+        Vector3 moveToOrigin = new Vector3(object.getPosition());
+        moveToOrigin.subtract(object.getOrigin());
+        moveToOrigin.negate();
 
-        translate(object, -pos.getX(), -pos.getY(), -pos.getZ());
+        object.angle += angle;
 
-        Log.d(TAG, "x: " + axis[0] + " y: " + axis[1] + " z: " + axis[2]);
+        translate(object, moveToOrigin.getX(), moveToOrigin.getY(), moveToOrigin.getZ());
 
-        Quaternion q = new Quaternion(new Vector3(pos));
-        q.set(new Vector3(-axis[0], -axis[1], -axis[2]), -angle);
+//        Log.d(TAG, "ORIGIN " + object.getOrigin());
+//        Log.d(TAG, "ORIGIN_MOVE " + moveToOrigin);
+//        Log.d(TAG, "ORIGINAL " + originalPos);
+//
+        Quaternion q = new Quaternion(moveToOrigin);
+        q.set(new Vector3(axis.getX(), axis.getY(), axis.getZ()), object.angle);
         q.normalize();
         object.setRotationMatrix(q.toMatrix());
-        Matrix.multiplyMM(object.getModelMatrix(), 0, object.getModelMatrix(), 0, object.getRotationMatrix(), 0);
-        translate(object, pos.getX(), pos.getY(), pos.getZ());
+//        Matrix.multiplyMM(object.getModelMatrix(), 0, object.getModelMatrix(), 0, object.getRotationMatrix(), 0);
+//
+//        moveToOrigin.negate();
+        translate(object, moveToOrigin.getX(), moveToOrigin.getY(), moveToOrigin.getZ());
+
+        Log.d(TAG, "angle: " + object.angle);
     }
 
     public static void scale(BaseObject object, float scaleFactor) {

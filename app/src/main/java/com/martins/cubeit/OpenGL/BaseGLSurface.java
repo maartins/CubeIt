@@ -11,7 +11,7 @@ import com.martins.cubeit.GameManager;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class CubeGLSurface extends GLSurfaceView implements GLSurfaceView.Renderer {
+public class BaseGLSurface extends GLSurfaceView implements GLSurfaceView.Renderer {
     private static final String TAG = "CubeGLSurface";
 
     private int viewWidth = 0;
@@ -23,12 +23,12 @@ public class CubeGLSurface extends GLSurfaceView implements GLSurfaceView.Render
     private GameManager logic = new GameManager();
     private VirtualCamera camera = new VirtualCamera();
 
-    public CubeGLSurface(Context context) {
+    public BaseGLSurface(Context context) {
         super(context);
         init(context);
     }
 
-    public CubeGLSurface(Context context, AttributeSet attrs) {
+    public BaseGLSurface(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }

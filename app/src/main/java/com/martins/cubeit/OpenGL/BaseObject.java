@@ -1,4 +1,4 @@
-package com.martins.cubeit.OpenGL.Cube;
+package com.martins.cubeit.OpenGL;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -25,28 +25,40 @@ public class BaseObject {
     private int texHandle;
     private int mvpMatrixHandle;
 
+    public int angle = 0;
+
     private final Shader objectShader = new Shader();
 
     private float[] mvpMatrix = new float[16];
     private float[] modelMatrix = new float[16];
     private float[] rotationMatrix = new float[16];
+    private float[] smth = new float[16];
 
     private Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
+    private Vector3 origin = new Vector3(0.0f, 0.0f, 0.0f);
 
     private boolean isHidden = false;
     private boolean isFirstSetup = true;
 
-    BaseObject(int id) {
+    protected BaseObject(int id) {
         this.id = id;
         Matrix.setIdentityM(rotationMatrix, 0);
     }
 
-    void setTexture(Texture texture) {
+    protected void setTexture(Texture texture) {
         this.texture = texture;
     }
 
-    void setMesh(Mesh mesh) {
+    protected void setMesh(Mesh mesh) {
         this.mesh = mesh;
+    }
+
+    public void setOrigin(Vector3 origin) {
+        this.origin = origin;
+    }
+
+    public Vector3 getOrigin() {
+        return origin;
     }
 
     public void setRotationMatrix(float[] rotationMatrix) {
@@ -77,11 +89,11 @@ public class BaseObject {
         return position;
     }
 
-    Texture getTexture() {
+    public Texture getTexture() {
         return texture;
     }
 
-    Mesh getMesh() {
+    public Mesh getMesh() {
         return mesh;
     }
 
@@ -95,7 +107,8 @@ public class BaseObject {
 
         if (!isHidden && isValid()) {
             Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
-            Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, modelMatrix, 0);
+            Matrix.multiplyMM(smth, 0, modelMatrix, 0, rotationMatrix, 0);
+            Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, smth, 0);
             objectShader.useProgram();
 
             GLES20.glEnableVertexAttribArray(positionHandle);
