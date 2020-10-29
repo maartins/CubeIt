@@ -3,6 +3,8 @@ package com.martins.cubeit.OpenGL;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import java.lang.reflect.Array;
+
 public final class TransformationUtils {
     private static final String TAG = "TransformationUtils";
 
@@ -29,12 +31,21 @@ public final class TransformationUtils {
 //        Log.d(TAG, "ORIGINAL " + originalPos);
 //
         Quaternion q = new Quaternion(moveToOrigin);
-        q.set(new Vector3(axis.getX(), axis.getY(), axis.getZ()), object.angle);
-        q.normalize();
-        object.setRotationMatrix(q.toMatrix());
+        q.set(axis, angle);
+        Quaternion q1 = new Quaternion(object.getRotationMatrix());
+        q1.multiply(q);
+        q1.normalize();
+
+//        float[] asd = new float[16];
+//        for(int i = 0;i<16;i++){
+//                asd[i] = object.getRotationMatrix()[i] + q.toMatrix()[i];
+//        }
+        //Matrix.multiplyMM(object.getRotationMatrix(), 0, object.getRotationMatrix(), 0, q.toMatrix(), 0);
+        //Matrix.setRotateEulerM(object.getRotationMatrix(),0, axis.getX(), axis.getY(), axis.getZ());
+        object.setRotationMatrix(q1.toMatrix());
 //        Matrix.multiplyMM(object.getModelMatrix(), 0, object.getModelMatrix(), 0, object.getRotationMatrix(), 0);
 //
-//        moveToOrigin.negate();
+        moveToOrigin.negate();
         translate(object, moveToOrigin.getX(), moveToOrigin.getY(), moveToOrigin.getZ());
 
         Log.d(TAG, "angle: " + object.angle);

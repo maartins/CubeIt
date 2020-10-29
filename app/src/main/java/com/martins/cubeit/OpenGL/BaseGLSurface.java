@@ -40,7 +40,7 @@ public class BaseGLSurface extends GLSurfaceView implements GLSurfaceView.Render
         setRenderer(this);
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
-        logic.init(context);
+        logic.init();
     }
 
     @Override

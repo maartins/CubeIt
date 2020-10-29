@@ -2,12 +2,14 @@ package com.martins.cubeit.OpenGL;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.martins.cubeit.OpenGL.Mesh;
 import com.martins.cubeit.OpenGL.Shader;
 import com.martins.cubeit.OpenGL.Texture;
 import com.martins.cubeit.OpenGL.Vector3;
 import com.martins.cubeit.OpenGL.VirtualCamera;
+import com.martins.cubeit.PersonalUtils;
 import com.martins.cubeit.R;
 
 
@@ -107,7 +109,7 @@ public class BaseObject {
 
         if (!isHidden && isValid()) {
             Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
-            Matrix.multiplyMM(smth, 0, modelMatrix, 0, rotationMatrix, 0);
+            Matrix.multiplyMM(smth, 0, rotationMatrix, 0, modelMatrix, 0);
             Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, smth, 0);
             objectShader.useProgram();
 

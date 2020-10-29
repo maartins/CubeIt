@@ -30,6 +30,10 @@ public final class Quaternion {
         set(axis, (double) 1);
     }
 
+    public Quaternion(float[] matrix) {
+        set(matrix);
+    }
+
     /**
      * @param axis rotation axis, unit vector.
      * @param angle the rotation angle.
@@ -41,6 +45,14 @@ public final class Quaternion {
         x = axis.getX() * s;
         y = axis.getY() * s;
         z = axis.getZ() * s;
+    }
+
+    public void set(float[] matrix) {
+        w = Math.sqrt(1.0 + matrix[0] + matrix[5] + matrix[10]) / 2.0;
+        double w4 = (4.0 * w);
+        x = (matrix[9] - matrix[6]) / w4 ;
+        y = (matrix[2] - matrix[8]) / w4 ;
+        z = (matrix[4] - matrix[1]) / w4 ;
     }
 
     public void normalize() {

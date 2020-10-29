@@ -3,6 +3,7 @@ package com.martins.cubeit.OpenGL.Cube;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.martins.cubeit.AssetLoader.AssetStorage;
 import com.martins.cubeit.CubeWare.CubeData.Position;
 import com.martins.cubeit.CubeWare.Main.Cube;
 import com.martins.cubeit.CubeWare.SubCubes.SubCube;
@@ -36,7 +37,10 @@ public class CubeObject {
 
     private SliceManager sliceRotationManager = new SliceManager(this);
 
-    public CubeObject(int sliceCount, Bitmap texture, Obj object) {
+    public CubeObject(int sliceCount) {
+        Obj object = AssetStorage.getAsset("cube.obj");
+        Bitmap texture = AssetStorage.getAsset("textures/cube.png");
+
         float offset = 2.1f;
         int sliceStart = (int) Math.floor(sliceCount / 2.0f);
         int cubeId = 0;
@@ -60,7 +64,9 @@ public class CubeObject {
         initSlices();
     }
 
-    public CubeObject(Cube cube, Obj object) {
+    public CubeObject(Cube cube) {
+        Obj object = AssetStorage.getAsset("cube.obj");
+
         ArrayList<SubCube> subCubes = cube.getSubCubes();
 
         float offset = 2.1f;
