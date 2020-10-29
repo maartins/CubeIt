@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.storage.StorageManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,10 @@ import android.view.WindowManager;
 
 import com.martins.cubeit.AssetLoader.AssetLoader;
 import com.martins.cubeit.AssetLoader.AssetStorage;
+import com.martins.cubeit.OpenGL.BaseGLSurface;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,16 +40,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (!checkDevicePermissions()) {
             Log.d(TAG, "Permissions are good.");
-            UiManager.addElement(findViewById(R.id.solve_button), UiManager.methods.solveButton);
-            UiManager.addElement(findViewById(R.id.reset_button), UiManager.methods.resetButton);
 
             AssetLoader.changeAssetManager(this.getAssets());
             AssetLoader.addAsset(Bitmap.class, "textures/cube.png");
             AssetLoader.addAsset(Obj.class, "cube.obj");
 
-            Bitmap image = AssetStorage.getAsset("textures/cube.png");
+            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraindedLayout);
+            layout.addView(new BaseGLSurface(this));
 
-            Log.e(TAG, "Asset retrieved: " + image);
+            UiManager.addElement(findViewById(R.id.solve_button), UiManager.methods.solveButton);
+            UiManager.addElement(findViewById(R.id.reset_button), UiManager.methods.resetButton);
         }
     }
 

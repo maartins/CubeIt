@@ -61,10 +61,6 @@ public class AssetLoader {
         }
     }
 
-    public static <T> T getAsset(Class<?> cls, String name) {
-        return null;
-    }
-
     private static class SingletonHelper {
         private static final AssetLoader INSTANCE = new AssetLoader();
     }
@@ -95,6 +91,7 @@ public class AssetLoader {
 
                 try {
                     cubeMesh = ObjUtils.convertToRenderable(ObjReader.read(manager.open("cube.obj")));
+                    Log.d(TAG, "Successfully loaded: " + path + " as " + Obj.class.toString());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
