@@ -38,12 +38,12 @@ public final class GameManager implements UiButtonListener{
     public void init() {
         UiManager.addUiButtonListener(this);
 
-        TransformationUtils.translate(box2, 0, 1.5f, 0);
-        drawables.add(box);
-        drawables.add(box2);
+        //TransformationUtils.translate(box2, 0, 1.5f, 0);
+        //drawables.add(box);
+        //drawables.add(box2);
 
         //Cube mainCube = new ScrableReader.generateCubeFromString(ScrableGenerator.generate(1));
-        //newCube();
+        newCube();
     }
 
     public void draw(VirtualCamera camera) {
@@ -52,21 +52,22 @@ public final class GameManager implements UiButtonListener{
     }
 
     public void update() {
-        //cubeObject.getSliceRotationManager().rotate();
+        cubeObject.getSliceRotationManager().rotate();
     }
 
     @Override
     public void onButtonClick(UiManager.methods caller) {
         Log.d(TAG, "Button clicked.");
 
-        if (caller.equals(UiManager.methods.solveButton))
-            TransformationUtils.rotate(box2, 2, new Vector3(0, 1, 0));
-            //cubeObject.getSliceRotationManager().startRotation(moves);
+        if (caller.equals(UiManager.methods.solveButton)) {
+//            TransformationUtils.rotate(box2, 2, new Vector3(0, 1, 0));
+            cubeObject.getSliceRotationManager().startRotation(moves);
+        }
 
         if (caller.equals(UiManager.methods.resetButton)) {
-            TransformationUtils.rotate(box2, 2, new Vector3(1, 0, 0));
-            //cubeObject.getSubCubes().forEach(s -> s.setIsObjectHidden(true));
-            //newCube();
+//            TransformationUtils.rotate(box2, 2, new Vector3(1, 0, 0));
+            cubeObject.getSubCubes().forEach(s -> s.setIsObjectHidden(true));
+            newCube();
         }
     }
 
@@ -74,10 +75,10 @@ public final class GameManager implements UiButtonListener{
         cubeObject = new CubeObject(new Cube(CubeType.Solved));
         drawables.addAll(cubeObject.getSubCubes());
 
-        moves = ScrableReader.generateMoveSetFromString("U3");
+        moves = ScrableReader.generateMoveSetFromString("F1U1L1R1B1D1");
 
-        cubeObject.hideCube();
-        cubeObject.showSlice(Position.Top);
-        cubeObject.showSlice(Position.Front);
+//        cubeObject.hideCube();
+//        cubeObject.showSlice(Position.Top);
+//        cubeObject.showSlice(Position.Front);
     }
 }

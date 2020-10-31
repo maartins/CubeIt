@@ -3,6 +3,7 @@ package com.martins.cubeit.OpenGL.Cube.Slices;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.martins.cubeit.CubeWare.CubeData.Position;
 import com.martins.cubeit.CubeWare.CubeData.RotationDirection;
 import com.martins.cubeit.OpenGL.Cube.SubCubeObject;
 import com.martins.cubeit.OpenGL.TransformationUtils;
@@ -19,7 +20,7 @@ public abstract class CubeSlice {
 
     protected CubeSlice top, left, right, bottom;
 
-    private ArrayList<SubCubeObject> subCubes = new ArrayList<>();
+    private final ArrayList<SubCubeObject> subCubes = new ArrayList<>();
 
     private Vector3 rotationAxis;
     private Vector3 sliceOrigin;
@@ -151,8 +152,8 @@ public abstract class CubeSlice {
     @NonNull
     @Override
     public String toString() {
-        return "tl: " + top_l.getId() + "\t tm: " + top_m.getId() + "\t tr: " + top_r.getId() + "\n" +
-               "ml: " + mid_l.getId() + "\t mm: " + mid_m.getId() + "\t mr: " + mid_r.getId() + "\n" +
-               "bl: " + bot_l.getId() + "\t bm: " + bot_m.getId() + "\t br: " + bot_r.getId();
+        return "tl: " + top_l + "\t tm: " + top_m + "\t tr: " + top_r + "\n" +
+               "ml: " + mid_l + "\t mm: " + mid_m + "\t mr: " + mid_r + "\n" +
+               "bl: " + bot_l + "\t bm: " + bot_m + "\t br: " + bot_r;
     }
 }

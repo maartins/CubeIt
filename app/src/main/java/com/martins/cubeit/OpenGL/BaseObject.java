@@ -4,17 +4,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.martins.cubeit.OpenGL.Mesh;
-import com.martins.cubeit.OpenGL.Shader;
-import com.martins.cubeit.OpenGL.Texture;
-import com.martins.cubeit.OpenGL.Vector3;
-import com.martins.cubeit.OpenGL.VirtualCamera;
-import com.martins.cubeit.PersonalUtils;
 import com.martins.cubeit.R;
-
-
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 public class BaseObject {
     private static final String TAG = "BaseObject";
@@ -27,14 +17,12 @@ public class BaseObject {
     private int texHandle;
     private int mvpMatrixHandle;
 
-    public int angle = 0;
-
     private final Shader objectShader = new Shader();
 
     private float[] mvpMatrix = new float[16];
     private float[] modelMatrix = new float[16];
     private float[] rotationMatrix = new float[16];
-    private float[] smth = new float[16];
+    private float[] transfomationMatrix = new float[16];
 
     private Vector3 position = new Vector3(0.0f, 0.0f, 0.0f);
     private Vector3 origin = new Vector3(0.0f, 0.0f, 0.0f);
@@ -109,8 +97,8 @@ public class BaseObject {
 
         if (!isHidden && isValid()) {
             Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
-            Matrix.multiplyMM(smth, 0, rotationMatrix, 0, modelMatrix, 0);
-            Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, smth, 0);
+            Matrix.multiplyMM(transfomationMatrix, 0, rotationMatrix, 0, modelMatrix, 0);
+            Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, transfomationMatrix, 0);
             objectShader.useProgram();
 
             GLES20.glEnableVertexAttribArray(positionHandle);
@@ -158,5 +146,15 @@ public class BaseObject {
 
     private boolean isValid() {
         return mesh.isValid() && texture.isValid();
+    }
+
+    @Override
+    public String toString() {
+        return "BaseObject{" +
+                "id=" + id +
+                "position=" + position +
+                ", origin=" + origin +
+                ", isHidden=" + isHidden +
+                '}';
     }
 }
