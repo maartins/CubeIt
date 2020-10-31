@@ -13,12 +13,14 @@ import com.martins.cubeit.CubeWare.Main.ScrableReader;
 import com.martins.cubeit.OpenGL.BaseObject;
 import com.martins.cubeit.OpenGL.BoxObject;
 import com.martins.cubeit.OpenGL.Cube.CubeObject;
+import com.martins.cubeit.OpenGL.Renderer;
 import com.martins.cubeit.OpenGL.TransformationUtils;
 import com.martins.cubeit.OpenGL.Vector3;
 import com.martins.cubeit.OpenGL.VirtualCamera;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
@@ -29,8 +31,7 @@ public final class GameManager implements UiButtonListener{
 
     private CubeObject cubeObject = null;
     private ArrayList<SliceRotatationResult> moves;
-    private ArrayList<BaseObject> drawables = new ArrayList<>();
-
+    private final Renderer renderer = new Renderer();
 
     BoxObject box = new BoxObject(1);
     BoxObject box2 = new BoxObject(2);
@@ -47,8 +48,7 @@ public final class GameManager implements UiButtonListener{
     }
 
     public void draw(VirtualCamera camera) {
-        for (BaseObject o : drawables)
-            o.draw(camera);
+        renderer.update(camera);
     }
 
     public void update() {
@@ -73,7 +73,8 @@ public final class GameManager implements UiButtonListener{
 
     private void newCube() {
         cubeObject = new CubeObject(new Cube(CubeType.Solved));
-        drawables.addAll(cubeObject.getSubCubes());
+
+        renderer.addAll(cubeObject.getSubCubes());
 
         moves = ScrableReader.generateMoveSetFromString("F1U1L1R1B1D1");
 

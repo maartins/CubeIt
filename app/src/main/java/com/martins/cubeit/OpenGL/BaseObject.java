@@ -28,7 +28,6 @@ public class BaseObject {
     private Vector3 origin = new Vector3(0.0f, 0.0f, 0.0f);
 
     private boolean isHidden = false;
-    private boolean isFirstSetup = true;
 
     protected BaseObject(int id) {
         this.id = id;
@@ -87,65 +86,44 @@ public class BaseObject {
         return mesh;
     }
 
-    public void draw(VirtualCamera camera) {
-        if (isFirstSetup) {
-            setupShaderProgram();
-            isFirstSetup = false;
-        }
-
-        texture.setupTexture();
-
-        if (!isHidden && isValid()) {
-            Matrix.multiplyMM(mvpMatrix, 0, camera.getProjectionMatrix(), 0, camera.getViewMatrix(), 0);
-            Matrix.multiplyMM(transfomationMatrix, 0, rotationMatrix, 0, modelMatrix, 0);
-            Matrix.multiplyMM(mvpMatrix, 0, mvpMatrix, 0, transfomationMatrix, 0);
-            objectShader.useProgram();
-
-            GLES20.glEnableVertexAttribArray(positionHandle);
-            GLES20.glVertexAttribPointer(positionHandle, 3, GLES20.GL_FLOAT, false, 3 * 4, mesh.getVertexBuffer());
-
-            if (texture.isValid()) {
-                GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture.getTextureId());
-                GLES20.glUniform1i(texHandle, 0);
-            }
-
-            GLES20.glEnableVertexAttribArray(texture.getTextureCoordHandle());
-            GLES20.glVertexAttribPointer(texture.getTextureCoordHandle(), texture.getTextureBufferSize(), GLES20.GL_FLOAT, false, texture.getTextureBufferSize() * 4, texture.getTextureBuffer());
-
-            GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, mvpMatrix, 0);
-
-            GLES20.glDrawElements(GLES20.GL_TRIANGLES, mesh.getIndexBuffer().capacity(), GLES20.GL_UNSIGNED_INT, mesh.getIndexBuffer());
-            GLES20.glDisableVertexAttribArray(positionHandle);
-            GLES20.glDisableVertexAttribArray(texture.getTextureCoordHandle());
-        }
+    public float[] getMvpMatrix() {
+        return mvpMatrix;
     }
 
-    private void setupShaderProgram() {
-        if (texture.isValid()) {
-            try {
-                objectShader.setProgram(R.raw.texture_vshader, R.raw.texture_fshader);
-                positionHandle = objectShader.getHandle("aPosition");
-                texture.setTextureCoordHandle(objectShader.getHandle("atexCoord"));
-                texHandle = objectShader.getHandle("uTexture");
-                mvpMatrixHandle = objectShader.getHandle("uMVPMatrix");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                objectShader.setProgram(R.raw.color_vshader, R.raw.color_fshader);
-                positionHandle = objectShader.getHandle("aPosition");
-                texture.setTextureCoordHandle(objectShader.getHandle("aColor"));
-                mvpMatrixHandle = objectShader.getHandle("uMVPMatrix");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public float[] getTransfomationMatrix() {
+        return transfomationMatrix;
     }
 
-    private boolean isValid() {
-        return mesh.isValid() && texture.isValid();
+    public int getPositionHandle() {
+        return positionHandle;
+    }
+
+    public int getTexHandle() {
+        return texHandle;
+    }
+
+    public int getMvpMatrixHandle() {
+        return mvpMatrixHandle;
+    }
+
+    public Shader getObjectShader() {
+        return objectShader;
+    }
+
+    public void setPositionHandle(int positionHandle) {
+        this.positionHandle = positionHandle;
+    }
+
+    public void setTexHandle(int texHandle) {
+        this.texHandle = texHandle;
+    }
+
+    public void setMvpMatrixHandle(int mvpMatrixHandle) {
+        this.mvpMatrixHandle = mvpMatrixHandle;
+    }
+
+    boolean isValid() {
+        return mesh.isValid() && texture.isValid() && !isHidden;
     }
 
     @Override

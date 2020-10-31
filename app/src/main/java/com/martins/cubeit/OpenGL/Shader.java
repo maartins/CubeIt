@@ -52,10 +52,6 @@ public class Shader {
         mProgram = mShaderVertex = mShaderFragment = 0;
     }
 
-    int programHandle(){
-        return mProgram;
-    }
-
     public int getHandle(String name){
         if(mShaderHandleMap.containsKey(name)){
             return mShaderHandleMap.get(name);
@@ -99,5 +95,9 @@ public class Shader {
         }
 
         return shader;
+    }
+
+    boolean isValid() {
+        return mShaderHandleMap.size() > 0;
     }
 }
