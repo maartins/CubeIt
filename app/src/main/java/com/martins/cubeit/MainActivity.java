@@ -1,9 +1,9 @@
 package com.martins.cubeit;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.storage.StorageManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -11,19 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.martins.cubeit.AssetLoader.AssetLoader;
-import com.martins.cubeit.AssetLoader.AssetStorage;
 import com.martins.cubeit.OpenGL.BaseGLSurface;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import de.javagl.obj.Obj;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UiButtonListener {
     private static final String TAG = "MainActivity";
 
     static {
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         removeTitleFromActionbar();
         PersonalUtils.resources = getResources();
 
-        if (!checkDevicePermissions()) {
+        if (checkDevicePermissions()) {
             Log.d(TAG, "Permissions are good.");
 
             AssetLoader.changeAssetManager(this.getAssets());
@@ -48,8 +45,21 @@ public class MainActivity extends AppCompatActivity {
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.constraindedLayout);
             layout.addView(new BaseGLSurface(this));
 
+            UiManager.addUiButtonListener(this);
             UiManager.addElement(findViewById(R.id.solve_button), UiManager.methods.solveButton);
             UiManager.addElement(findViewById(R.id.reset_button), UiManager.methods.resetButton);
+            UiManager.addElement(findViewById(R.id.capture_button), UiManager.methods.captureButton);
+        } else {
+            this.recreate();
+        }
+    }
+
+    @Override
+    public void onButtonClick(UiManager.methods caller) {
+        if (caller.equals(UiManager.methods.captureButton)) {
+            Log.d(TAG, "Start Capture activity.");
+            Intent intent = new Intent(this, CameraActivity.class);
+            this.startActivity(intent);
         }
     }
 
@@ -80,9 +90,9 @@ public class MainActivity extends AppCompatActivity {
             if (permissionArray != null)
                 ActivityCompat.requestPermissions(this, permissionArray, 1);
 
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 

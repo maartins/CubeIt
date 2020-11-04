@@ -1,6 +1,7 @@
 package com.martins.cubeit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -33,17 +34,9 @@ public final class GameManager implements UiButtonListener{
     private ArrayList<SliceRotatationResult> moves;
     private final Renderer renderer = new Renderer();
 
-    BoxObject box = new BoxObject(1);
-    BoxObject box2 = new BoxObject(2);
-
     public void init() {
         UiManager.addUiButtonListener(this);
 
-        //TransformationUtils.translate(box2, 0, 1.5f, 0);
-        //drawables.add(box);
-        //drawables.add(box2);
-
-        //Cube mainCube = new ScrableReader.generateCubeFromString(ScrableGenerator.generate(1));
         newCube();
     }
 
@@ -60,12 +53,10 @@ public final class GameManager implements UiButtonListener{
         Log.d(TAG, "Button clicked.");
 
         if (caller.equals(UiManager.methods.solveButton)) {
-//            TransformationUtils.rotate(box2, 2, new Vector3(0, 1, 0));
             cubeObject.getSliceRotationManager().startRotation(moves);
         }
 
         if (caller.equals(UiManager.methods.resetButton)) {
-//            TransformationUtils.rotate(box2, 2, new Vector3(1, 0, 0));
             cubeObject.getSubCubes().forEach(s -> s.setIsObjectHidden(true));
             newCube();
         }
@@ -77,9 +68,5 @@ public final class GameManager implements UiButtonListener{
         renderer.addAll(cubeObject.getSubCubes());
 
         moves = ScrableReader.generateMoveSetFromString("F1U1L1R1B1D1");
-
-//        cubeObject.hideCube();
-//        cubeObject.showSlice(Position.Top);
-//        cubeObject.showSlice(Position.Front);
     }
 }
