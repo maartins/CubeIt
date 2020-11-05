@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.martins.cubeit.AssetLoader.AssetLoader;
 import com.martins.cubeit.OpenGL.BaseGLSurface;
@@ -20,12 +19,17 @@ import java.util.ArrayList;
 
 import de.javagl.obj.Obj;
 
+import org.opencv.core.Mat;
+
 public class MainActivity extends AppCompatActivity implements UiButtonListener {
     private static final String TAG = "MainActivity";
 
     static {
         System.loadLibrary("native-lib");
+        System.loadLibrary("opencv_java4");
     }
+
+    public native String stringFromJNI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements UiButtonListener 
 
         if (checkDevicePermissions()) {
             Log.d(TAG, "Permissions are good.");
+
+            Mat test = new Mat();
+            Log.d(TAG, "OPENCV: " + stringFromJNI() + " asd " + test.depth());
 
             AssetLoader.changeAssetManager(this.getAssets());
             AssetLoader.addAsset(Bitmap.class, "textures/cube.png");
