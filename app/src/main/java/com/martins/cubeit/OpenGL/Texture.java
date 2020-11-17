@@ -31,10 +31,6 @@ public class Texture {
         textureCoordHandle = textureCoord;
     }
 
-    public int getTextureId() {
-        return textureHandle.getTextureId();
-    }
-
     public int getTextureCoordHandle() {
         return textureCoordHandle;
     }
@@ -45,6 +41,10 @@ public class Texture {
 
     public FloatBuffer getTextureBuffer() {
         return textureBuffer;
+    }
+
+    public TextureHandle getTextureHandle() {
+        return textureHandle;
     }
 
     public boolean isValid() {

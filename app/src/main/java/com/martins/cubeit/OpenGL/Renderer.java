@@ -25,22 +25,21 @@ public class Renderer {
     public void update(VirtualCamera camera) {
         for (BaseObject drawable: drawables) {
             if (drawable.isValid()) {
-                setupShaderProgram(drawable);
-
                 final Texture texture = drawable.getTexture();
                 final Mesh mesh = drawable.getMesh();
 
+                setupShaderProgram(drawable);
+                drawable.getObjectShader().useProgram();
                 texture.setupTexture();
 
                 applyTransformation(drawable, camera);
-                drawable.getObjectShader().useProgram();
 
                 GLES20.glEnableVertexAttribArray(drawable.getPositionHandle());
                 GLES20.glVertexAttribPointer(drawable.getPositionHandle(), 3, GLES20.GL_FLOAT, false, 3 * 4, mesh.getVertexBuffer());
 
                 if (texture.isValid()) {
                     GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture.getTextureId());
+                    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, texture.getTextureHandle().getTextureId());
                     GLES20.glUniform1i(drawable.getTexHandle(), 0);
                 }
 

@@ -71,7 +71,7 @@ public class BaseGLSurface extends GLSurfaceView implements GLSurfaceView.Render
         viewWidth = width;
         viewHeight = height;
 
-        camera.setup(viewWidth, viewHeight);
+        camera.setup(viewWidth, viewHeight, false);
     }
 }
 

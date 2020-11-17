@@ -3,4 +3,5 @@
     <string name="reset">Reset</string>
     <string name="solve">Solve</string>
     <string name="capture">Capture</string>
+    <string name="take_picture">Take picture</string>
 </resources>

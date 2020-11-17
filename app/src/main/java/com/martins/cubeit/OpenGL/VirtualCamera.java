@@ -20,7 +20,10 @@ public final class VirtualCamera implements View.OnTouchListener{
     private float cameraX = -1.4f, cameraY = 1.38f, cameraZ = -1.42f;
     private float speedModifier = 0.005f;
 
-    void setup(int width, int height) {
+    private boolean isStatic = false;
+
+    public void setup(int width, int height, boolean isStatic) {
+        this.isStatic = isStatic;
         float ratio = (float)width / height;
         Matrix.setLookAtM(viewMatrix, 0, cameraX, cameraY, cameraZ, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
         Matrix.perspectiveM(projectionMatrix, 0, 60.0f, ratio, 1, 7);
@@ -28,18 +31,21 @@ public final class VirtualCamera implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v, MotionEvent e) {
-        //Log.d(TAG, "Touch");
+        Log.d(TAG, "Touch.");
+
+        if (isStatic) {
+            return true;
+        }
+
         float x = e.getX();
         float y = e.getY();
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //Log.d(TAG, "Action was DOWN.");
                 previousX = x;
                 previousY = y;
                 return true;
             case MotionEvent.ACTION_UP:
-                //Log.d(TAG, "Action was UP.");
                 return true;
             case MotionEvent.ACTION_MOVE:
                 float dx = x - previousX;
@@ -56,10 +62,6 @@ public final class VirtualCamera implements View.OnTouchListener{
                 cameraX = (float) (distance * Math.cos(curAngleX));
                 cameraY = (float) (distance * Math.cos(curAngleY));
                 cameraZ = (float) (distance * Math.sin(curAngleX));
-
-                //Log.d(TAG, "cameraX: " + cameraX + " cameraY: " + cameraY + " cameraZ: " + cameraZ);
-                //Log.d(TAG, "curAngleX: " + curAngleX + " curAngleY: " + curAngleY);
-                //Log.d(TAG, "dx: " + dx + " dy: " + dy);
 
                 Matrix.setLookAtM(viewMatrix, 0,
                         cameraX, cameraY, cameraZ,

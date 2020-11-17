@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 /**
  * This class defines the OES Texture that can be attached to SurfaceTexture
@@ -20,7 +19,7 @@ public class TextureHandle {
         return textureHandler;
     }
 
-    void initOES(){
+    public void initOES(){
         int[] mTextureHandles = new int[1];
         GLES20.glGenTextures(1, mTextureHandles, 0);
         textureHandler = mTextureHandles[0];
