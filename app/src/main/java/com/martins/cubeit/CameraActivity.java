@@ -28,7 +28,10 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.opencv.android.Utils;
@@ -53,6 +56,15 @@ public class CameraActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
+    private SeekBar r1 = null;
+    private SeekBar g1 = null;
+    private SeekBar b1 = null;
+
+    private SeekBar r2 = null;
+    private SeekBar g2 = null;
+    private SeekBar b2 = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +72,123 @@ public class CameraActivity extends AppCompatActivity {
         removeTitleFromActionbar();
         Log.d(TAG, "Camera activity started: " + this.toString());
 
-        textureView = findViewById(R.id.texture);
+        textureView = findViewById(R.id.textureView);
         textureView.setSurfaceTextureListener(textureListener);
         findViewById(R.id.captureFrame).setOnClickListener(v -> takePicture());
+
+        r1 = findViewById(R.id.r1);
+        TextView tr1 = findViewById(R.id.tr1);
+        r1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tr1.setText(String.format("%d", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        g1 = findViewById(R.id.g1);
+        TextView tg1 = findViewById(R.id.tg1);
+        g1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tg1.setText(String.format("%d", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        b1 = findViewById(R.id.b1);
+        TextView tb1 = findViewById(R.id.tb1);
+        b1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tb1.setText(String.format("%d", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        r2 = findViewById(R.id.r2);
+        TextView tr2 = findViewById(R.id.tr2);
+        r2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tr2.setText(String.format("%d", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        g2 = findViewById(R.id.g2);
+        TextView tg2 = findViewById(R.id.tg2);
+        g2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tg2.setText(String.format("%d", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        b2 = findViewById(R.id.b2);
+        TextView tb2 = findViewById(R.id.tb2);
+        b2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                tb2.setText(String.format("%d", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void removeTitleFromActionbar() {
@@ -158,15 +284,17 @@ public class CameraActivity extends AppCompatActivity {
                         Bitmap bitmapImage = BitmapFactory.decodeByteArray(frameData, 0, frameData.length, null);
 
                         Mat mat = new Mat();
-                        Bitmap bmp32 = bitmapImage.copy(Bitmap.Config.RGB_565, true);
+                        Bitmap bmp32 = bitmapImage.copy(Bitmap.Config.ARGB_8888, true);
                         Utils.bitmapToMat(bmp32, mat);
 
-                        processMat(mat.getNativeObjAddr());
+                        int t = Integer.parseInt(((EditText) findViewById(R.id.editTextNumber)).getText().toString());
 
-                        Bitmap bm = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.RGB_565);
+                        processMat(mat.getNativeObjAddr(), r1.getProgress(), g1.getProgress(), b1.getProgress(), r2.getProgress(), g2.getProgress(), b2.getProgress(), t);
+
+                        Bitmap bm = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888);
                         Utils.matToBitmap(mat, bm);
 
-                        ImageView iv = findViewById(R.id.imageView1);
+                        ImageView iv = findViewById(R.id.imageView);
                         iv.setImageBitmap(bm);
 
                         image.close();
@@ -299,5 +427,5 @@ public class CameraActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    private static native void processMat(long inputMat);
+    private static native boolean processMat(long frameAddress, int r1, int g1, int b1, int r2, int g2, int b2, int t);
 }
